@@ -19,15 +19,15 @@
 	camera{
 		perspective
 		location Loc
-		right -2*X*sqrt(AspectRatio)/Zoom
-		up 2*Y/(sqrt(AspectRatio)*Zoom)
-		direction Z/(Zoom*Pers)
+		right -2*Pers*X*sqrt(AspectRatio)
+		up 2*Pers*Y/sqrt(AspectRatio)
+		direction Z
 	 	sky Y
 		look_at LookAt
 	}
 	light_source{
 		Loc
-		color White
+		rgb<1,1,1>
 	}
 #else
 	#declare Loc=SCS(Lng,Lat);
@@ -41,13 +41,13 @@
 	}
 	light_source{
 		SCS(Lng,Lat)
-		color White
+		rgb<1,1,1>
 		parallel
 		point_at 0
 	}
 #end
 
-background{White}
+background{rgb<1,1,1>}
 
 
 

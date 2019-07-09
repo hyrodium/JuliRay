@@ -3,9 +3,6 @@
 
 //#include "Hy_functions.inc"
 //lim
-#macro Mod(a,n)
-	mod(mod(a,n)+n,n)
-#end
 
 #macro Sign(a)
 	#if(a>0)
@@ -18,16 +15,6 @@
 	b
 #end
 
-#macro Sym3d(a,n)
-	#if(Mod(n,3)=0)
-		#local b=<vdot(a,x),vdot(a,y),vdot(a,z)>;
-	#elseif(Mod(n,3)=1)
-		#local b=<vdot(a,z),vdot(a,x),vdot(a,y)>;
-	#elseif(Mod(n,3)=2)
-		#local b=<vdot(a,y),vdot(a,z),vdot(a,x)>;
-	#end
-	b
-#end
 
 #macro SGP(a,w)
 	(2*a*<1,1,cos(w)>+z*(vdot(a,a)-1)*sin(w))/((vdot(a,a)-1)*(1-cos(w))+2*(vdot(a,z)*sin(w)+1))
