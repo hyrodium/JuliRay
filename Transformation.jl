@@ -15,12 +15,19 @@ struct ParallelTranslation <:TransformedObject
     b :: Array{Float64,1}
 end
 
+struct Scaling <:TransformedObject
+    object :: Object
+    k :: Float64
+end
+
 function translate2pov(affinetransform :: AffineTransform)
-    return "object{"*translate2pov(affinetransform.object)*" matrix"*translate2pov(vcat(reshape(affinetransform.A,9),affinetransform.b))*"}"
+    return "object{"*translate2pov(affinetransform.object)*" matrix "*translate2pov(vcat(reshape(affinetransform.A,9),affinetransform.b))*"}"
 end
 
-function translate2pov(affinetransform :: ParallelTranslation)
-    return "object{"*translate2pov(affinetransform.object)*" matrix"*translate2pov(vcat(reshape(affinetransform.A,9),affinetransform.b))*"}"
+function translate2pov(paralleltranslation :: ParallelTranslation)
+    return "object{"*translate2pov(paralleltranslation.object)*" translate "*translate2pov(paralleltranslation.b)*"}"
 end
 
-
+function translate2pov(scaling :: Scaling)
+    return "object{"*translate2pov(scaling.object)*" scale "*translate2pov(scaling.k)*"}"
+end
