@@ -47,7 +47,6 @@ function Circumcenter(point₁,point₂,point₃)
     return center
 end
 
-function NormalVector(v₁::Array{Float64,1},v₂::Array{Float64,1},v₃::Array{Float64,1})
-    return normalize(cross(v₁,v₂)+cross(v₂,v₃)+cross(v₃,v₁))
+function NormalVector(p₁::Array{Float64,1},p₂::Array{Float64,1},p₃::Array{Float64,1})
+    return normalize(cross(p₁,p₂)+cross(p₂,p₃)+cross(p₃,p₁))
 end
-
