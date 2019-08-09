@@ -36,7 +36,7 @@ function rotatematrix(v::AbstractVector,θ::Real)
     return (oneunit(N)+N^2+(-cos(θ)*N^2+sin(θ)*N))
 end
 
-function Circumcenter(point₁,point₂,point₃)
+function Circumcenter(point₁::AbstractVector,point₂::AbstractVector,point₃::AbstractVector)
     l₁²=(norm(point₂-point₃))^2
     l₂²=(norm(point₃-point₁))^2
     l₃²=(norm(point₁-point₂))^2
@@ -47,6 +47,6 @@ function Circumcenter(point₁,point₂,point₃)
     return center
 end
 
-function NormalVector(p₁::Array{Float64,1},p₂::Array{Float64,1},p₃::Array{Float64,1})
+function NormalVector(p₁::AbstractVector,p₂::AbstractVector,p₃::AbstractVector)
     return normalize(cross(p₁,p₂)+cross(p₂,p₃)+cross(p₃,p₁))
 end
