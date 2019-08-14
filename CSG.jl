@@ -52,13 +52,13 @@ struct csgDifference <: csgObject
 end
 struct csgClip <: csgObject
     objects :: Array{Object,1}
-    csgDifference(objects) =
+    csgClip(objects) =
     if(length(objects) ≠ 2)
         error("Too many objects.")
     elseif(objects[1] == Empty)
         Empty
     elseif(objects[2] == Empty)
-        objects[1]
+        Empty
     else
         new(objects)
     end
