@@ -60,7 +60,7 @@ struct Box <: PrimitiveObject
     elseif (norm(vertex2-vertex1) == 0)
         Empty
     else
-        new(end1,end2,abs(radius))
+        new(vertex1,vertex2)
     end
 end
 struct Disc <: PrimitiveObject
