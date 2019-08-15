@@ -19,7 +19,6 @@ end
 abstract type JuliRay end
 abstract type Object <: JuliRay end
 
-RealVector=Union{Array{T,1} where T <: Real}
 
 include("PrimitiveObject.jl")
 include("CSG.jl")
