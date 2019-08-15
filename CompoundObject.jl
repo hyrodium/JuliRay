@@ -17,7 +17,7 @@ end
 function Torus(point1::RealVector, point2::RealVector, point3::RealVector, radius::Float64)
     center=Circumcenter(point1,point2,point3)
     normal=NormalVector(point1,point2,point3)
-    R=norm(point1-center)
+    R=(norm(point1-center)+norm(point2-center)+norm(point3-center))/3
     return Torus(center,normal,R,radius)
 end
 
@@ -39,7 +39,6 @@ function Blocks³(point1::RealVector, point2::RealVector, point3::RealVector, th
     e₁=-normalize(point3-center)
     e₂=cross(e₃,e₁)
     box2=AffineTransform(box,hcat(e₁,e₂,e₃),center)
-    # println(det(hcat(point1-center,point3-center,e₃)))
     if(det(hcat(point1-center,point3-center,e₃))>0)
         return csgIntersection(box1,box2)
     else
@@ -49,4 +48,14 @@ end
 
 function Arc(point1::RealVector, point2::Array{Float64,1}, point3::Array{Float64,1}, radius::Float64)
     return csgIntersection(Torus(point1,point2,point3,radius),Blocks³(point1,point2,point3,2radius))
+end
+
+function Line(point1::RealVector, point2::RealVector; infty=10^5)
+    v=normalize(point2-point1)
+    return Cylinder(point1-infty*v,point2+infty*v)
+end
+
+function HalfLine(point1::RealVector, point2::RealVector; infty=10^5)
+    v=normalize(point2-point1)
+    return Cylinder(point1,point2+infty*v)
 end
