@@ -52,3 +52,16 @@ end
 function NormalVector(p₁::RealVector,p₂::RealVector,p₃::RealVector)
     return normalize(cross(p₁,p₂)+cross(p₂,p₃)+cross(p₃,p₁))
 end
+
+function Angles(p₁::RealVector,p₂::RealVector,p₃::RealVector)
+    l₁=norm(p₂-p₃)
+    l₂=norm(p₃-p₁)
+    l₃=norm(p₁-p₂)
+    cosα₁=dot(p₂-p₁,p₃-p₁)/(l₂*l₃)
+    cosα₂=dot(p₃-p₂,p₁-p₂)/(l₃*l₁)
+    cosα₃=dot(p₁-p₃,p₂-p₃)/(l₁*l₂)
+    α₁=acos(clamp(cosα₁,-1,1))
+    α₂=acos(clamp(cosα₂,-1,1))
+    α₃=acos(clamp(cosα₃,-1,1))
+    return α₁,α₂,α₃
+end
