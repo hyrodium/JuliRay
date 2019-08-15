@@ -1,61 +1,79 @@
 ## Compound objects
 
-function Arrow(end1::RealVector, end2::RealVector, radius::Real)
-    n=normalize(end2-end1)
-    end3=end2-6*radius*n
-    return csgUnion(Cylinder(end1,end3,radius),Cone(end3,end2,2*radius))
+function Line(p₁::RealVector, p₂::RealVector, r::Real; infty=10^5)
+    v=normalize(p₂-p₁)
+    return Cylinder(p₁-infty*v,p₂+infty*v,r)
 end
 
-function Torus(center::RealVector, normal::RealVector, radius1::Float64, radius2::Float64)
+function HalfLine(p₁::RealVector, p₂::RealVector, r::Real; infty=10^5)
+    v=normalize(p₂-p₁)
+    return Cylinder(p₁,p₂+infty*v,r)
+end
+
+function Arrow(end1::RealVector, end2::RealVector, r::Real)
+    n=normalize(end2-end1)
+    end3=end2-6*r*n
+    return csgUnion(Cylinder(end1,end3,r),Cone(end3,end2,2*r))
+end
+
+function Torus(center::RealVector, normal::RealVector, R::Float64, r::Float64)
     e₁=normalize(normal)
     e₂=OrthogonalVector(e₁)
     e₃=cross(e₁,e₂)
     A=hcat(e₃,e₁,e₂)
-    return AffineTransform(Torus(radius1,radius2),A,center)
+    return AffineTransform(Torus(R,r),A,center)
 end
 
-function Torus(point1::RealVector, point2::RealVector, point3::RealVector, radius::Float64)
-    center=Circumcenter(point1,point2,point3)
-    normal=NormalVector(point1,point2,point3)
-    R=(norm(point1-center)+norm(point2-center)+norm(point3-center))/3
-    return Torus(center,normal,R,radius)
+function Torus(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-5))
+    α₁,α₂,α₃=Angles(p₁,p₂,p₃)
+    if (α₁>π-ε)
+        return Line(p₂,p₃,r)
+    elseif (α₂>π-ε)
+        return Line(p₃,p₁,r)
+    elseif (α₃>π-ε)
+        return Line(p₁,p₂,r)
+    else
+        center=Circumcenter(p₁,p₂,p₃)
+        normal=NormalVector(p₁,p₂,p₃)
+        R=(norm(p₁-center)+norm(p₂-center)+norm(p₃-center))/3
+        return Torus(center,normal,R,r)
+    end
 end
 
-function Disc(point1::RealVector, point2::RealVector, point3::RealVector)
-    center=Circumcenter(point1,point2,point3)
-    normal=NormalVector(point1,point2,point3)
-    R=norm(point1-center)
+function Disc(p₁::RealVector, p₂::RealVector, p₃::RealVector)
+    center=Circumcenter(p₁,p₂,p₃)
+    normal=NormalVector(p₁,p₂,p₃)
+    R=norm(p₁-center)
     return Disc(center,normal,R)
 end
 
-function Blocks³(point1::RealVector, point2::RealVector, point3::RealVector, thickness::Float64)
-    center=Circumcenter(point1,point2,point3)
-    e₃=NormalVector(point1,point2,point3)
-    R=norm(point1-center)
-    e₁=normalize(point1-center)
+function Blocks³(p₁::RealVector, p₂::RealVector, p₃::RealVector, thickness::Float64)
+    center=Circumcenter(p₁,p₂,p₃)
+    e₃=NormalVector(p₁,p₂,p₃)
+    R=norm(p₁-center)
+    e₁=normalize(p₁-center)
     e₂=cross(e₃,e₁)
     box=Box([R+thickness,R+thickness,thickness],-[R+thickness,0,thickness])
     box1=AffineTransform(box,hcat(e₁,e₂,e₃),center)
-    e₁=-normalize(point3-center)
+    e₁=-normalize(p₃-center)
     e₂=cross(e₃,e₁)
     box2=AffineTransform(box,hcat(e₁,e₂,e₃),center)
-    if(det(hcat(point1-center,point3-center,e₃))>0)
+    if(det(hcat(p₁-center,p₃-center,e₃))>0)
         return csgIntersection(box1,box2)
     else
         return csgMerge(box1,box2)
     end
 end
 
-function Arc(point1::RealVector, point2::Array{Float64,1}, point3::Array{Float64,1}, radius::Float64)
-    return csgIntersection(Torus(point1,point2,point3,radius),Blocks³(point1,point2,point3,2radius))
-end
-
-function Line(point1::RealVector, point2::RealVector; infty=10^5)
-    v=normalize(point2-point1)
-    return Cylinder(point1-infty*v,point2+infty*v)
-end
-
-function HalfLine(point1::RealVector, point2::RealVector; infty=10^5)
-    v=normalize(point2-point1)
-    return Cylinder(point1,point2+infty*v)
+function Arc(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-5))
+    α₁,α₂,α₃=Angles(p₁,p₂,p₃)
+    if (α₁>π-ε)
+        return csgUnion(HalfLine(p₁,p₁+(p₂-p₃),r),HalfLine(p₃,p₃-(p₂-p₃),r))
+    elseif (α₂>π-ε)
+        return Cylinder(p₁,p₃,r)
+    elseif (α₃>π-ε)
+        return csgUnion(HalfLine(p₁,p₁+(p₁-p₂),r),HalfLine(p₃,p₃-(p₁-p₂),r))
+    else
+        return csgIntersection(Torus(p₁,p₂,p₃,r),Blocks³(p₁,p₂,p₃,2r))
+    end
 end
