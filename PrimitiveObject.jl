@@ -6,33 +6,75 @@ struct Empty <: PrimitiveObject end
 struct Sphere <: PrimitiveObject
     center :: Array{Float64,1}
     radius :: Float64
-    Sphere(center,radius) = (radius ≠ 0.0) ? new(center,abs(radius)) : Empty
+    Sphere(center,radius) =
+    if (length(center) ≠ 3)
+        error("center of sphere must be an element of ℝ³")
+    elseif (radius == 0)
+        Empty
+    else
+        new(center,abs(radius))
+    end
 end
 struct Cylinder <: PrimitiveObject
     end1 :: Array{Float64,1}
     end2 :: Array{Float64,1}
     radius :: Float64
-    Cylinder(end1,end2,radius) = (norm(end2-end1)*radius ≠ 0) ? new(end1,end2,abs(radius)) : Empty
+    Cylinder(end1,end2,radius) =
+    if (length(end1) ≠ 3)
+        error("end of cylinder must be an element of ℝ³")
+    elseif (length(end2) ≠ 3)
+        error("end of cylinder must be an element of ℝ³")
+    elseif (radius == 0)
+        Empty
+    elseif (norm(end2-end1) == 0)
+        Empty
+    else
+        new(end1,end2,abs(radius))
+    end
 end
 struct Cone <: PrimitiveObject
     end1 :: Array{Float64,1}
     end2 :: Array{Float64,1}
     radius :: Float64
-    Cone(end1,end2,radius) = (norm(end2-end1)*radius ≠ 0) ? new(end1,end2,abs(radius)) : Empty
+    Cone(end1,end2,radius) =
+    if (length(end1) ≠ 3)
+        error("end of cone must be an element of ℝ³")
+    elseif (length(end2) ≠ 3)
+        error("end of cone must be an element of ℝ³")
+    elseif (radius == 0)
+        Empty
+    elseif (norm(end2-end1) == 0)
+        Empty
+    else
+        new(end1,end2,abs(radius))
+    end
 end
 struct Box <: PrimitiveObject
     vertex1 :: Array{Float64,1}
     vertex2 :: Array{Float64,1}
-    Box(vertex1,vertex2) = (norm(vertex2-vertex1) ≠ 0) ? new(vertex1,vertex2) : Empty
+    Box(vertex1,vertex2) =
+    if (length(vertex1) ≠ 3)
+        error("vertex of box must be an element of ℝ³")
+    elseif (length(vertex2) ≠ 3)
+        error("vertex of box must be an element of ℝ³")
+    elseif (norm(vertex2-vertex1) == 0)
+        Empty
+    else
+        new(end1,end2,abs(radius))
+    end
 end
 struct Disc <: PrimitiveObject
     center :: Array{Float64,1}
     normal :: Array{Float64,1}
     radius :: Float64
     Disc(center,normal,radius) =
-    if(norm(normal) == 0)
-        error()
-    elseif(radius == 0)
+    if (length(center) ≠ 3)
+        error("center of disc must be an element of ℝ³")
+    elseif (length(normal) ≠ 3)
+        error("normal of disc must be an element of ℝ³")
+    elseif (norm(normal) == 0)
+        error("normal vector must be non-zero")
+    elseif (radius == 0)
         Empty
     else
         new(center,normal,abs(radius))
@@ -42,25 +84,27 @@ struct Torus <: PrimitiveObject
     radius1 :: Float64
     radius2 :: Float64
     Torus(radius1,radius2) =
-    if(radius2 == 0)
+    if (radius2 == 0)
         Empty
-    elseif(radius1 == 0)
-        Sphere([0,0,0],radius2)
+    elseif (radius1 == 0)
+        Sphere([0,0,0],abs(radius2))
     else
-        new(radius1,radius2)
+        new(abs(radius1),abs(radius2))
     end
 end
 struct Polygon <: PrimitiveObject
     vertices :: Array{Array{Float64,1},1}
     Polygon(vertices) =
-    if(rank(hcat(vertices...)-repeat(+(vertices...)/length(vertices),1,length(vertices))) ≠ 2)
+    if (!all(e->e==3,length.(vertices)))
+        error("vertex of polygon must be an element of ℝ³")
+    elseif (rank(hcat(vertices...)-repeat(+(vertices...)/length(vertices),1,length(vertices))) ≠ 2)
         Empty
     else
         new(vertices)
     end
 end
 
-function Polygon(vertices...)
+function Polygon(vertices::RealVector...)
     return Polygon([vertices...])
 end
 
