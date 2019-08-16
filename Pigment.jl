@@ -19,13 +19,13 @@ end
 struct rgbColor <: ColoredObject
     object :: Object
     color :: Color
-    rgbColor(object,color) = (object ≠ Empty) ? new(object,color) : Empty
+    rgbColor(object,color) = (object ≠ Empty()) ? new(object,color) : Empty()
 end
 struct rgbftColor <:ColoredObject
     object :: Object
     color :: Color
     transparence :: FT
-    rgbftColor(object,color,ft) = (object ≠ Empty) ? new(object,color,ft) : Empty
+    rgbftColor(object,color,ft) = (object ≠ Empty()) ? new(object,color,ft) : Empty()
 end
 
 # Color
@@ -70,4 +70,3 @@ end
 function Transparent(affinetransform::AffineTransform,ft::FT)
     return AffineTransform(Transparent(affinetransform.object,ft),affinetransform.A,affinetransform.b)
 end
-

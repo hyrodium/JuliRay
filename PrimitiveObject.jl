@@ -10,7 +10,7 @@ struct Sphere <: PrimitiveObject
     if (length(center) ≠ 3)
         error("center of sphere must be an element of ℝ³")
     elseif (radius == 0)
-        Empty
+        Empty()
     else
         new(center,abs(radius))
     end
@@ -25,9 +25,9 @@ struct Cylinder <: PrimitiveObject
     elseif (length(end2) ≠ 3)
         error("end of cylinder must be an element of ℝ³")
     elseif (radius == 0)
-        Empty
+        Empty()
     elseif (norm(end2-end1) == 0)
-        Empty
+        Empty()
     else
         new(end1,end2,abs(radius))
     end
@@ -42,9 +42,9 @@ struct Cone <: PrimitiveObject
     elseif (length(end2) ≠ 3)
         error("end of cone must be an element of ℝ³")
     elseif (radius == 0)
-        Empty
+        Empty()
     elseif (norm(end2-end1) == 0)
-        Empty
+        Empty()
     else
         new(end1,end2,abs(radius))
     end
@@ -58,7 +58,7 @@ struct Box <: PrimitiveObject
     elseif (length(vertex2) ≠ 3)
         error("vertex of box must be an element of ℝ³")
     elseif (norm(vertex2-vertex1) == 0)
-        Empty
+        Empty()
     else
         new(vertex1,vertex2)
     end
@@ -75,7 +75,7 @@ struct Disc <: PrimitiveObject
     elseif (norm(normal) == 0)
         error("normal vector must be non-zero")
     elseif (radius == 0)
-        Empty
+        Empty()
     else
         new(center,normal,abs(radius))
     end
@@ -85,7 +85,7 @@ struct Torus <: PrimitiveObject
     radius2 :: Float64
     Torus(radius1,radius2) =
     if (radius2 == 0)
-        Empty
+        Empty()
     elseif (radius1 == 0)
         Sphere([0,0,0],abs(radius2))
     else
@@ -98,7 +98,7 @@ struct Polygon <: PrimitiveObject
     if (!all(e->e==3,length.(vertices)))
         error("vertex of polygon must be an element of ℝ³")
     elseif (rank(hcat(vertices...)-repeat(+(vertices...)/length(vertices),1,length(vertices))) ≠ 2)
-        Empty
+        Empty()
     else
         new(vertices)
     end
@@ -129,4 +129,8 @@ end
 function translate2pov(polygon :: Polygon)
     n=length(polygon.vertices)
     return "polygon{"*translate2pov(n)* (*(reshape([(repeat([","],n),translate2pov.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
+end
+
+function isempty(object::Object)
+    return repr(object)=="Empty()"
 end

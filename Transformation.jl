@@ -7,7 +7,7 @@ struct AffineTransform <:TransformedObject
     object :: Object
     A :: Array{Float64,2}
     b :: Array{Float64,1}
-    AffineTransform(object,A,b) = (object ≠ Empty && rank(A) ≥ 2) ? new(object,A,b) : Empty
+    AffineTransform(object,A,b) = (object ≠ Empty() && rank(A) ≥ 2) ? new(object,A,b) : Empty()
 end
 struct ParallelTranslation <:TransformedObject
     object :: Object

@@ -5,22 +5,22 @@ abstract type csgObject <: Object end
 struct csgUnion <: csgObject
     objects :: Array{Object,1}
     csgUnion(objects) =
-    if(length(DeleteDuplicates(deleteat!(objects, objects.== Empty))) == 0)
-        Empty
-    elseif(length(DeleteDuplicates(deleteat!(objects, objects.== Empty))) == 1)
+    if (length(DeleteDuplicates(deleteat!(objects, isempty.(objects)))) == 0)
+        Empty()
+    elseif (length(DeleteDuplicates(deleteat!(objects, isempty.(objects)))) == 1)
         objects[1]
     else
-        new(DeleteDuplicates(deleteat!(objects, objects.== Empty)))
+        new(DeleteDuplicates(deleteat!(objects, isempty.(objects))))
     end
 end
 struct csgIntersection <: csgObject
     objects :: Array{Object,1}
     csgIntersection(objects) =
-    if(Empty ∈ objects)
-        Empty
-    elseif(length(DeleteDuplicates(objects)) == 0)
-        Empty
-    elseif(length(DeleteDuplicates(objects)) == 1)
+    if (Empty() ∈ objects)
+        Empty()
+    elseif (length(DeleteDuplicates(objects)) == 0)
+        Empty()
+    elseif (length(DeleteDuplicates(objects)) == 1)
         objects[1]
     else
         new(DeleteDuplicates(objects))
@@ -29,22 +29,22 @@ end
 struct csgMerge <: csgObject
     objects :: Array{Object,1}
     csgMerge(objects) =
-    if(length(DeleteDuplicates(deleteat!(objects, objects.== Empty))) == 0)
-        Empty
-    elseif(length(DeleteDuplicates(deleteat!(objects, objects.== Empty))) == 1)
+    if (length(DeleteDuplicates(deleteat!(objects, objects.== Empty()))) == 0)
+        Empty()
+    elseif (length(DeleteDuplicates(deleteat!(objects, objects.== Empty()))) == 1)
         objects[1]
     else
-        new(DeleteDuplicates(deleteat!(objects, objects.== Empty)))
+        new(DeleteDuplicates(deleteat!(objects, objects.== Empty())))
     end
 end
 struct csgDifference <: csgObject
     objects :: Array{Object,1}
     csgDifference(objects) =
-    if(length(objects) ≠ 2)
+    if (length(objects) ≠ 2)
         error("Too many objects.")
-    elseif(objects[1] == Empty)
-        Empty
-    elseif(objects[2] == Empty)
+    elseif (objects[1] == Empty())
+        Empty()
+    elseif (objects[2] == Empty())
         objects[1]
     else
         new(objects)
@@ -53,12 +53,12 @@ end
 struct csgClip <: csgObject
     objects :: Array{Object,1}
     csgClip(objects) =
-    if(length(objects) ≠ 2)
+    if (length(objects) ≠ 2)
         error("Too many objects.")
-    elseif(objects[1] == Empty)
-        Empty
-    elseif(objects[2] == Empty)
-        Empty
+    elseif (objects[1] == Empty())
+        Empty()
+    elseif (objects[2] == Empty())
+        Empty()
     else
         new(objects)
     end
