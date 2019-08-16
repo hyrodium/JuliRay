@@ -96,8 +96,8 @@ struct Polygon <: PrimitiveObject
     vertices :: Array{Array{Float64,1},1}
     Polygon(vertices) =
     if (!all(e->e==3,length.(vertices)))
-        error("vertex of polygon must be an element of ℝ³")
-    elseif (rank(hcat(vertices...)-repeat(+(vertices...)/length(vertices),1,length(vertices))) ≠ 2)
+        error("vertices of polygon must be an element of ℝ³")
+    elseif (rank(hcat(vertices...)-repeat(+(vertices...)/length(vertices),1,length(vertices)),atol=10^(-10)) ≠ 2)
         Empty()
     else
         new(vertices)
