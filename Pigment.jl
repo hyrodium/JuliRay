@@ -7,7 +7,7 @@ struct FT <: Pigment
     filter::Float64
     transmit::Float64
     FT(filter,transmit) =
-    if(filter<0 || transmit<0 || filter+transmit>1)
+    if (filter<0 || transmit<0 || filter+transmit>1)
         error("だめです")
     else
         new(filter,transmit)
@@ -19,13 +19,23 @@ end
 struct rgbColor <: ColoredObject
     object :: Object
     color :: Color
-    rgbColor(object,color) = (object ≠ Empty()) ? new(object,color) : Empty()
+    rgbColor(object,color) =
+    if (object == Empty())
+        Empty()
+    else
+        new(object,color)
+    end
 end
 struct rgbftColor <:ColoredObject
     object :: Object
     color :: Color
     transparence :: FT
-    rgbftColor(object,color,ft) = (object ≠ Empty()) ? new(object,color,ft) : Empty()
+    rgbftColor(object,color,ft) =
+    if (object == Empty())
+        Empty()
+    else
+        new(object,color,ft)
+    end
 end
 
 # Color

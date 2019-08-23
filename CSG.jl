@@ -29,12 +29,12 @@ end
 struct csgMerge <: csgObject
     objects :: Array{Object,1}
     csgMerge(objects) =
-    if (length(DeleteDuplicates(deleteat!(objects, objects.== Empty()))) == 0)
+    if (length(DeleteDuplicates(deleteat!(objects, isempty.(objects)))) == 0)
         Empty()
-    elseif (length(DeleteDuplicates(deleteat!(objects, objects.== Empty()))) == 1)
+    elseif (length(DeleteDuplicates(deleteat!(objects, isempty.(objects)))) == 1)
         objects[1]
     else
-        new(DeleteDuplicates(deleteat!(objects, objects.== Empty())))
+        new(DeleteDuplicates(deleteat!(objects, isempty.(objects))))
     end
 end
 struct csgDifference <: csgObject

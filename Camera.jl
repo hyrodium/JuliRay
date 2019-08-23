@@ -11,11 +11,11 @@ struct PerspectiveCamera <: Camera
     height::Int
     color::Color
     PerspectiveCamera(attitude,position,area,width,height,color)=
-    if(area ≤ 0)
+    if (area ≤ 0)
         error("area must be positive")
-    elseif(area<0)
+    elseif (area<0)
         error("だめです")
-    elseif(!isorthogonal(attitude))
+    elseif (!isorthogonal(attitude))
         error("だめです")
     else
         new(attitude,position,area,width,height,color)
@@ -35,6 +35,27 @@ function translate2pov(camera::PerspectiveCamera)
     str=str*translate2pov(light)
     return str
 end
+
+struct ParallelCamera <: Camera
+    attitude :: Array{Float64,2}
+    position :: Array{Float64,1}
+    area::Float64
+    width::Int
+    height::Int
+    color::Color
+    PerspectiveCamera(attitude,position,area,width,height,color)=
+    if (area ≤ 0)
+        error("area must be positive")
+    elseif (area<0)
+        error("だめです")
+    elseif (!isorthogonal(attitude))
+        error("だめです")
+    else
+        new(attitude,position,area,width,height,color)
+    end
+end
+
+
 
 function LngLatCamera(;lng=-π/2,lat=π/2,tilt=0,pers=0.1,zoom=1.0,lookat=[0.0,0.0,0.0],width::Int=500,height::Int=500,color::Color=RGB(1,1,1))
     e₃=[cos(lat)*cos(lng),cos(lat)*sin(lng),sin(lat)]
