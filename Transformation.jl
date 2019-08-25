@@ -19,10 +19,24 @@ end
 struct ParallelTranslation <:TransformedObject
     object :: Object
     b :: Array{Float64,1}
+    ParallelTranslation(object,b) =
+    if (object == Empty())
+        Empty()
+    else
+        new(object,b)
+    end
 end
 struct Scaling <:TransformedObject
     object :: Object
     k :: Float64
+    Scaling(object,k) =
+    if (object == Empty())
+        Empty()
+    elseif (k == 0)
+        Empty()
+    else
+        new(object,k)
+    end
 end
 
 function translate2pov(affinetransform :: AffineTransform)
@@ -38,6 +52,10 @@ end
 function AffineTransform(object::Object,A;fixedpoint=[0.0,0.0,0.0])
     b=fixedpoint-A*fixedpoint
     return AffineTransform(object,A,b)
+end
+function Scaling(object::Object,k;fixedpoint=[0.0,0.0,0.0])
+    b=fixedpoint-k*fixedpoint
+    return ParallelTranslation(Scaling(object,k),b)
 end
 
 function Rotate(object::Object,v,θ,fixedpoint=[0.0,0.0,0.0])
