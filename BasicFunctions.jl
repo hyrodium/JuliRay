@@ -1,7 +1,8 @@
 ## Basic functions
 
-RealVector=Union{Array{T,1} where T <: Real}
-Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
+# RealVector=Union{Array{T,1} where T <: Real}
+RealVector=Vector{<:Real}
+# Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
 
 function DeleteDuplicates(v::Array{T,1})::Array{T,1} where T <: Any
     w=Array{eltype(v),1}()
@@ -39,14 +40,29 @@ function rotatematrix(v::RealVector,θ::Real)
     return (oneunit(N)+N^2+(-cos(θ)*N^2+sin(θ)*N))
 end
 
-function Circumcenter(point₁::RealVector,point₂::RealVector,point₃::RealVector)
-    l₁²=(norm(point₂-point₃))^2
-    l₂²=(norm(point₃-point₁))^2
-    l₃²=(norm(point₁-point₂))^2
+function Circumcenter(p₁::RealVector,p₂)
+    c₁=1
+    c₂=1
+    center=(c₁*p₁+c₂*p₂)/(c₁+c₂)
+    return center
+end
+
+function Circumcenter(p₁::RealVector,p₂::RealVector,p₃::RealVector)
+    l₁²=(norm(p₂-p₃))^2
+    l₂²=(norm(p₃-p₁))^2
+    l₃²=(norm(p₁-p₂))^2
     c₁=l₁²*(l₂²+l₃²-l₁²)
     c₂=l₂²*(l₃²+l₁²-l₂²)
     c₃=l₃²*(l₁²+l₂²-l₃²)
-    center=(c₁*point₁+c₂*point₂+c₃*point₃)/(c₁+c₂+c₃)
+    center=(c₁*p₁+c₂*p₂+c₃*p₃)/(c₁+c₂+c₃)
+    return center
+end
+
+function Circumcenter(p₁::RealVector,p₂::RealVector,p₃::RealVector,p₄::RealVector)
+    c₁=l₁²*(l₂²+l₃²-l₁²)
+    c₂=l₂²*(l₃²+l₁²-l₂²)
+    c₃=l₃²*(l₁²+l₂²-l₃²)
+    center=(c₁*p₁+c₂*p₂+c₃*p₃)/(c₁+c₂+c₃)
     return center
 end
 
