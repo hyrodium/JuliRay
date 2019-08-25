@@ -77,3 +77,9 @@ function Arc(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; �
         return csgIntersection(Torus(p₁,p₂,p₃,r),Blocks³(p₁,p₂,p₃,2r))
     end
 end
+
+function Sphere(point₁::RealVector,point₂::RealVector,point₃::RealVector,point₄::RealVector)
+    center=Circumcenter(point₁,point₂,point₃,point₄)
+    radius=Circumradius(point₁,point₂,point₃,point₄)
+    return Sphere(center,radius)
+end
