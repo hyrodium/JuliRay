@@ -53,10 +53,10 @@ function AffineTransform(object::Object,A;fixedpoint=[0.0,0.0,0.0])
     b=fixedpoint-A*fixedpoint
     return AffineTransform(object,A,b)
 end
-function Scaling(object::Object,k;fixedpoint=[0.0,0.0,0.0])
-    b=fixedpoint-k*fixedpoint
-    return ParallelTranslation(Scaling(object,k),b)
-end
+# function Scaling(object::Object,k;fixedpoint=[0.0,0.0,0.0])
+#     b=fixedpoint-k*fixedpoint
+#     return ParallelTranslation(Scaling(object,k),b)
+# end
 
 function Rotate(object::Object,v,θ,fixedpoint=[0.0,0.0,0.0])
     return AffineTransform(object,rotatematrix(v,θ),fixedpoint=fixedpoint)
