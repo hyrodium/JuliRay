@@ -131,6 +131,8 @@ function translate2pov(polygon :: Polygon)
     return "polygon{"*translate2pov(n)* (*(reshape([(repeat([","],n),translate2pov.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
 end
 
+import Base: isempty
+
 function isempty(object::Object)
     return repr(object)=="Empty()"
 end
