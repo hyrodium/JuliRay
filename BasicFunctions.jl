@@ -59,11 +59,14 @@ function Circumcenter(p₁::RealVector,p₂::RealVector,p₃::RealVector)
 end
 
 function Circumcenter(p₁::RealVector,p₂::RealVector,p₃::RealVector,p₄::RealVector)
-    c₁=l₁²*(l₂²+l₃²-l₁²)
-    c₂=l₂²*(l₃²+l₁²-l₂²)
-    c₃=l₃²*(l₁²+l₂²-l₃²)
-    center=(c₁*p₁+c₂*p₂+c₃*p₃)/(c₁+c₂+c₃)
-    return center
+    n=3
+    𝒑=hcat(p₁,p₂,p₃,p₄)
+    p²=[dot(𝒑[1:n,i],𝒑[1:n,i]) for i in 1:(n+1)]
+    P=vcat(𝒑,reshape([1. for i in 1:(n+1)],1,n+1))
+    Q=inv(P)
+    𝒄=(Q'*p²)[1:n]/2
+    r=sqrt(dot(𝒄,𝒄)+dot(p²,Q[:,end]))
+    return 𝒄
 end
 
 function NormalVector(p₁::RealVector,p₂::RealVector,p₃::RealVector)
