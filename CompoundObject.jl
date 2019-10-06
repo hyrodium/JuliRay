@@ -24,7 +24,7 @@ function Torus(center::RealVector, normal::RealVector, R::Float64, r::Float64)
     return AffineTransform(Torus(R,r),A,center)
 end
 
-function Torus(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-5))
+function Torus(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-4))
     α₁,α₂,α₃=Angles(p₁,p₂,p₃)
     if (α₁>π-ε)
         return Line(p₂,p₃,r)
@@ -65,7 +65,7 @@ function Blocks³(p₁::RealVector, p₂::RealVector, p₃::RealVector, thicknes
     end
 end
 
-function Arc(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-5))
+function Arc(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; ε=10^(-4))
     α₁,α₂,α₃=Angles(p₁,p₂,p₃)
     if (α₁>π-ε)
         return csgUnion(HalfLine(p₁,p₁+(p₂-p₃),r),HalfLine(p₃,p₃-(p₂-p₃),r))
