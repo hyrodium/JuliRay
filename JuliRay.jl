@@ -6,7 +6,11 @@ include("BasicFunctions.jl")
 
 ## Translation to POV-Ray code
 function translate2pov(x::Real)
-    return @sprintf "%1.24f" x
+    if (isfinite(x))
+        return @sprintf "%1.24f" x
+    else
+        error("numerical value must be finite")
+    end
 end
 
 function translate2pov(x::Array{T,1}) where T <: Real
