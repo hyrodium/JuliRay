@@ -80,3 +80,6 @@ end
 function Transparent(affinetransform::AffineTransform,ft::FT)
     return AffineTransform(Transparent(affinetransform.object,ft),affinetransform.A,affinetransform.b)
 end
+function Transparent(affinetransform::ParallelTranslation,ft::FT)
+    return ParallelTranslation(Transparent(affinetransform.object,ft),affinetransform.b)
+end
