@@ -1,7 +1,7 @@
 ## Basic functions
 
-# RealVector=Union{Array{T,1} where T <: Real}
 RealVector = Vector{<:Real}
+RealMatrix = Matrix{<:Real}
 # Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
 
 function DeleteDuplicates(v::Array{T,1})::Array{T,1} where T <: Any
@@ -17,7 +17,7 @@ function DeleteDuplicates(v::Array{T,1})::Array{T,1} where T <: Any
 end
 
 function OrthogonalVector(v::RealVector) where T <: Real
-    if norm(v)==0
+    if norm(v) == 0
         error("zero vector")
     else
         v₁ = normalize(v)

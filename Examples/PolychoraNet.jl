@@ -17,15 +17,15 @@ function Smooth(a,b,x)
 end
 
 function ℝ³⭢S³(p::Array{T,1}) where T<:Real
-    if(length(p)≠3)
+    if length(p)≠3
         error("No Point on ℝ³")
     end
     return [2p[1]/(1+p[1]^2+p[2]^2+p[3]^2),2p[2]/(1+p[1]^2+p[2]^2+p[3]^2),2p[3]/(1+p[1]^2+p[2]^2+p[3]^2),(-1+p[1]^2+p[2]^2+p[3]^2)/(1+p[1]^2+p[2]^2+p[3]^2)]
 end
 function ℝ³⭢S³(p::Array{T,1},θ::Real) where T<:Real
-    if(length(p)≠3)
+    if length(p)≠3
         error("No Point on ℝ³")
-    elseif(θ<ε)
+    elseif θ<ε
         return [p[1:3]...,0.0]
     else
         c=[0,0,0,cot(θ)]
@@ -35,18 +35,18 @@ function ℝ³⭢S³(p::Array{T,1},θ::Real) where T<:Real
     end
 end
 function S³⭢ℝ³(q::Array{T,1}) where T<:Real
-    if(length(q)≠4)
+    if length(q)≠4
         error("No Point on S³")
-    elseif(!(norm(q)≈1.0))
+    elseif !(norm(q) ≈ 1.0)
         print(norm(q))
         error("No Point on unit S³, radius: $(norm(q))")
     end
     return [q[1]/(1-q[4]),q[2]/(1-q[4]),q[3]/(1-q[4])]
 end
 function S³⭢ℝ³(q::Array{T,1},θ::Real) where T<:Real
-    if(length(q)≠4)
+    if length(q)≠4
         error("No Point on S³")
-    elseif(θ<ε)
+    elseif θ<ε
         return q[1:3]
     else
         c=[0,0,0,cot(θ)]
@@ -55,7 +55,7 @@ function S³⭢ℝ³(q::Array{T,1},θ::Real) where T<:Real
     end
 end
 function ℝ⁴⭢S³(p::Array{T,1},θ::Real) where T<:Real
-    if(θ<ε)
+    if θ<ε
         return [p[1:3]...,0.0]
     else
         R=1/sin(θ)
@@ -83,7 +83,7 @@ function Mirror(q::RealVector,p₁::RealVector,p₂::RealVector,p₃::RealVector
 end
 
 function PickFace(cell::CELL, v::RealVector,POINTS³)
-    if(norm(v)≈0)
+    if norm(v) ≈ 0
         error("vector v must be non-zero")
     end
     faces=vertices.(cell)
@@ -100,11 +100,11 @@ function NewCell(cell::CELL,v::RealVector,θ,POINTS³, POINTS⁴)
     for f ∈ c for e ∈ f for v ∈ e push!(IND_cell,v) end end end
     IND_cell=union(IND_cell)
     IND_cell2=[
-        if(i ∈ IND_face)
+        if i ∈ IND_face
             i
         else
             push!(POINTS³,Mirror(POINTS³[i],POINTS³[IND_face[1]],POINTS³[IND_face[2]],POINTS³[IND_face[3]]));
-            if(θ<ε)
+            if θ<ε
                 push!(POINTS⁴,[POINTS³[end]...,0]);
             else
                 O=[0,0,0,cot(θ)]
@@ -139,10 +139,10 @@ function SphericalPolygon(v::Array{T,1},θ::Real) where T<:RealVector
     U=S³⭢ℝ³(u,θ)
     w=[ℝ⁴⭢S³((v[i]+v[mod(i,length(v))+1])/2,θ) for i ∈ 1:length(v)]
     W=(q->S³⭢ℝ³(q,θ)).(w)
-    if(θ<ε)
+    if θ<ε
         return Polygon(V)
-    elseif(rank(hcat(V...),atol=1.0e-4)==2)
-    # elseif(rank(hcat(V...),atol=1.0e-12)==2)
+    elseif rank(hcat(V...),atol=1.0e-4)==2
+    # elseif rank(hcat(V...),atol=1.0e-12)==2
         m=4
         vw=copy(v)
         for _ ∈ 1:m

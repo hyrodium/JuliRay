@@ -1,10 +1,12 @@
-## Packages
+module JuliRay
+
 using LinearAlgebra
 using Printf
 
 include("BasicFunctions.jl")
 
 ## Translation to POV-Ray code
+export translate2pov
 function translate2pov(x::Real)
     if (isfinite(x))
         return @sprintf "%1.24f" x
@@ -19,10 +21,9 @@ function translate2pov(x::Array{T,1}) where T <: Real
     return "<"*y[2:end-1]*">"
 end
 
-## Types
-abstract type JuliRay end
-abstract type Object <: JuliRay end
-
+# Types
+abstract type JR end
+abstract type Object <: JR end
 
 include("PrimitiveObject.jl")
 include("CSG.jl")
@@ -65,3 +66,5 @@ function render(object::Object;name="new", index::Int=0, camera::Camera=LngLatCa
 
     run(`povray $Name`)
 end
+
+end # module

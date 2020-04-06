@@ -1,7 +1,7 @@
 using Colors
 
 abstract type ColoredObject <: Object end
-abstract type Pigment <: JuliRay end
+abstract type Pigment <: JR end
 
 struct FT <: Pigment
     filter::Float64
@@ -13,8 +13,6 @@ struct FT <: Pigment
         new(filter,transmit)
     end
 end
-
-
 
 struct rgbColor <: ColoredObject
     object :: Object

@@ -1,8 +1,9 @@
-## Camera
+# Camera
 
-abstract type Camera <: JuliRay end
-abstract type Light <: JuliRay end
+abstract type Camera <: JR end
+abstract type Light <: JR end
 
+export PerspectiveCamera
 struct PerspectiveCamera <: Camera
     attitude :: Array{Float64,2}
     position :: Array{Float64,1}
@@ -67,7 +68,7 @@ function LngLatCamera(;lng=-π/2,lat=π/2,tilt=0,pers=0.1,zoom=1.0,lookat=[0.0,0
     return PerspectiveCamera(attitude,position,area,width,height,color)
 end
 
-## Light
+# Light
 struct PointLight <: Light
     position :: Array{Float64,1}
     color :: Color
