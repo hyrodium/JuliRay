@@ -2,6 +2,7 @@
 
 abstract type csgObject <: Object end
 
+export csgUnion
 struct csgUnion <: csgObject
     objects :: Array{Object,1}
 
@@ -17,7 +18,12 @@ struct csgUnion <: csgObject
     function csgUnion(objects::Object...)
         return csgUnion([objects...])
     end
+    function csgUnion(itr::Base.Generator)
+        return csgUnion(collect(itr))
+    end
 end
+
+export csgIntersection
 struct csgIntersection <: csgObject
     objects :: Array{Object,1}
 
@@ -35,7 +41,12 @@ struct csgIntersection <: csgObject
     function csgIntersection(objects::Object...)
         return csgIntersection([objects...])
     end
+    function csgIntersection(itr::Base.Generator)
+        return csgIntersection(collect(itr))
+    end
 end
+
+export csgMerge
 struct csgMerge <: csgObject
     objects :: Array{Object,1}
     function csgMerge(objects)
@@ -50,7 +61,12 @@ struct csgMerge <: csgObject
     function csgMerge(objects::Object...)
         return csgMerge([objects...])
     end
+    function csgMerge(itr::Base.Generator)
+        return csgMerge(collect(itr))
+    end
 end
+
+export csgDifference
 struct csgDifference <: csgObject
     objects :: Array{Object,1}
     function csgDifference(objects)
@@ -68,6 +84,8 @@ struct csgDifference <: csgObject
         return csgDifference([object1,object2])
     end
 end
+
+export csgClip
 struct csgClip <: csgObject
     objects :: Array{Object,1}
     function csgClip(objects)
@@ -85,6 +103,8 @@ struct csgClip <: csgObject
         return csgClip([object1,object2])
     end
 end
+
+export csgBound
 struct csgBound <: csgObject
     objects :: Array{Object,1}
     function csgBound(objects)
