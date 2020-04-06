@@ -11,11 +11,11 @@ struct PerspectiveCamera <: Camera
     height::Int
     color::Color
     PerspectiveCamera(attitude,position,area,width,height,color)=
-    if (area ≤ 0)
+    if area ≤ 0
         error("area must be positive")
-    elseif (area<0)
+    elseif area < 0
         error("だめです")
-    elseif (!isorthogonal(attitude))
+    elseif !isorthogonal(attitude)
         error("だめです")
     else
         new(attitude,position,area,width,height,color)
@@ -44,11 +44,11 @@ struct ParallelCamera <: Camera
     height::Int
     color::Color
     PerspectiveCamera(attitude,position,area,width,height,color)=
-    if (area ≤ 0)
+    if area ≤ 0
         error("area must be positive")
-    elseif (area<0)
+    elseif area < 0
         error("だめです")
-    elseif (!isorthogonal(attitude))
+    elseif !isorthogonal(attitude)
         error("だめです")
     else
         new(attitude,position,area,width,height,color)
