@@ -165,6 +165,8 @@ for i ∈ 1:M
         ParallelTranslation(object10,[-3,-4,0]),
         ParallelTranslation(object11,[5,-3.5,0])
     )
-
-    render(ParallelTranslation(object,[0,0,0]),camera=LngLatCamera(lng=-90°-15°*(Smooth(0.1,0.5,t)-Smooth(2.5,2.9,t)),lat=90°-50°*(Smooth(0.1,0.5,t)-Smooth(2.5,2.9,t)),pers=0.2,zoom=0.065,width=640*2,height=360*2),name="N"*string(m),index=i)
+    lng = -90°-15°*(Smooth(0.1,0.5,t)-Smooth(2.5,2.9,t))
+    lat = 90°-50°*(Smooth(0.1,0.5,t)-Smooth(2.5,2.9,t))
+    camera = LngLatCamera(lng=lng,lat=lat,pers=0.2,zoom=0.065,width=640*2,height=360*2)
+    render(object, camera=camera, name="NetOfCubes", index=i)
 end

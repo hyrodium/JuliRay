@@ -1,9 +1,15 @@
-include("../JuliRay.jl")
+push!(LOAD_PATH, "Modules")
+using LinearAlgebra
+using Colors
+using Revise
+using JuliRay
+RealVector=JuliRay.RealVector
+RealMatrix=JuliRay.RealMatrix
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
 φ=MathConstants.φ
-include("../PlatonicSolids.jl")
+include("Polyhedra.jl")
 
-##%
+##
 ε=10^(-1.2)
 
 function f(x)
@@ -70,11 +76,11 @@ function NormalVector(p₁::RealVector,p₂::RealVector,p₃::RealVector,p₄::R
 end
 
 function Mirror(q::RealVector,p₁::RealVector,p₂::RealVector,p₃::RealVector)
-    𝒏=NormalVector(p₁,p₂,p₃)
+    𝒏=JuliRay.NormalVector(p₁,p₂,p₃)
     return q-2*dot(𝒏,q-p₁)*𝒏
 end
 function Mirror(q::RealVector,p₁::RealVector,p₂::RealVector,p₃::RealVector,p₄::RealVector)
-    𝒏=NormalVector(p₁,p₂,p₃,p₄)
+    𝒏=JuliRay.NormalVector(p₁,p₂,p₃,p₄)
     return q-2*dot(𝒏,q-p₁)*𝒏
 end
 function Mirror(q::RealVector,p₁::RealVector,p₂::RealVector,p₃::RealVector,p₄::RealVector, θ)
@@ -152,30 +158,29 @@ function SphericalPolygon(v::Array{T,1},θ::Real) where T<:RealVector
         VW=(q->S³⭢ℝ³(q,θ)).(vw)
         return csgUnion(Polygon(VW))
     else
-        O=Circumcenter(U,V[1],V[2],V[3])
+        O=JuliRay.Circumcenter(U,V[1],V[2],V[3])
         sphere=Sphere(O,norm(U-O))
-        N=NormalVector(V[1],W[1],V[2]);
+        N=JuliRay.NormalVector(V[1],W[1],V[2]);
         direction=sign(dot(N,O-U))
 
-        cylinders=csgIntersection([
+        cylinders=csgIntersection(
                 (V₁=V[i];
                 V₂=V[mod(i,n)+1];
                 V₃=V[mod(i+1,n)+1];
-                C=Circumcenter(V₁,W[i],V₂);
-                N=NormalVector(V₁,W[i],V₂);
+                C=JuliRay.Circumcenter(V₁,W[i],V₂);
+                N=JuliRay.NormalVector(V₁,W[i],V₂);
                 direction=sign(dot(N,U-W[i]));
                 cylinder=Cylinder(C,C+2*direction*norm(U-O)*N,norm(U-O)))
-                for i ∈ 1:n
-                ])
+                for i ∈ 1:n)
         return csgClip(sphere,cylinders)
     end
 end
 
 function Cells2Object(cells::Array{CELL,1},θ,POINTS⁴;rᵥ=0.05,rₑ=0.025,color=RGB(1,1,1))
     cs=copy(cells)
-    fs=DeleteDuplicates(vcat(cs...))
-    es=DeleteDuplicates(vcat(fs...))
-    vs=DeleteDuplicates(vcat(es...))
+    fs=unique(vcat(cs...))
+    es=unique(vcat(fs...))
+    vs=unique(vcat(es...))
     V=rgbColor(csgUnion([SphericalSphere(POINTS⁴[v],rᵥ,θ) for v ∈ vs]),RGB(0.1,0.1,0.1))
     E=rgbColor(csgUnion([SphericalCylinder(POINTS⁴[e[1]],POINTS⁴[e[2]],rₑ,θ) for e ∈ es]),RGB(0.2,0.2,0.2))
     # F=rgbftColor(csgUnion([SphericalPolygon([POINTS⁴[i] for i ∈ vertices(f)],θ) for f ∈ fs]),color,FT(0,0))
@@ -461,21 +466,21 @@ end
 
 ##%
 M=120
-for i ∈ 0:2M
+for i ∈ 0:2M-1
     θ=π/2*(Smooth(0,1,i/M)-Smooth(1,2,i/M))
     cells, POINTS³, POINTS⁴=C₈(θ)
     render(Cells2Object(cells,θ,POINTS⁴,color=RGB(0.2,1,1),rₑ=0.012,rᵥ=0.03),camera=LngLatCamera(lng=180°+360°*i/M,lat=25°,pers=0.2,zoom=0.15,width=1200,height=900),name="8-Cell",index=i+1)
 end
 
 M=120
-for i ∈ 0:2M
+for i ∈ 80
     θ=π/2*(Smooth(0,1,i/M)-Smooth(1,2,i/M))
     cells, POINTS³, POINTS⁴=C₁₆(θ)
     render(Cells2Object(cells,θ,POINTS⁴,color=RGB(0.2,1,1)),camera=LngLatCamera(lng=180°+360°*i/M,lat=25°,pers=0.2,zoom=0.12,width=600,height=450),name="16-Cell",index=i+1)
 end
 
 M=120
-for i ∈ 0:2M
+for i ∈ 50
     θ=π/2*(Smooth(0,1,i/M)-Smooth(1,2,i/M))
     cells, POINTS³, POINTS⁴=C₂₄(θ)
     render(Cells2Object(cells,θ,POINTS⁴,color=RGB(0.2,1,1)),camera=LngLatCamera(lng=180°+360°*i/M,lat=25°,pers=0.2,zoom=0.12,width=600,height=450),name="24-Cell",index=i+1)

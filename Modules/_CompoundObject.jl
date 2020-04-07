@@ -47,6 +47,6 @@ function Arc(p₁::RealVector, p₂::RealVector, p₃::RealVector, r::Float64; �
     elseif (α₃>π-ε)
         return csgUnion(HalfLine(p₁,p₁+(p₁-p₂),r),HalfLine(p₃,p₃-(p₁-p₂),r))
     else
-        return csgIntersection(Torus(p₁,p₂,p₃,r),Blocks³(p₁,p₂,p₃,2r))
+        return csgBound(csgIntersection(Torus(p₁,p₂,p₃,r),Blocks³(p₁,p₂,p₃,2r)),Torus(p₁,p₂,p₃,r))
     end
 end

@@ -18,13 +18,13 @@ function vertices(face::FACE)
     return w
 end
 function vertices(cell::CELL)
-    return DeleteDuplicates(vcat(vcat(cell...)...))
+    return unique(vcat(vcat(cell...)...))
 end
 function edges(face::FACE)
     return face
 end
 function edges(cell::CELL)
-    return DeleteDuplicates(sort.(vcat(cell...)))
+    return unique(sort.(vcat(cell...)))
 end
 function faces(cell::CELL)
     return cell
