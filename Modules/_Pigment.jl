@@ -3,6 +3,7 @@ using Colors
 abstract type ColoredObject <: Object end
 abstract type Pigment <: JR end
 
+export FT
 struct FT <: Pigment
     filter::Float64
     transmit::Float64
@@ -16,6 +17,7 @@ struct FT <: Pigment
     end
 end
 
+export rgbColor
 struct rgbColor <: ColoredObject
     object :: Object
     color :: Color
@@ -28,6 +30,8 @@ struct rgbColor <: ColoredObject
         end
     end
 end
+
+export rgbftColor
 struct rgbftColor <:ColoredObject
     object :: Object
     color :: Color
@@ -43,24 +47,25 @@ struct rgbftColor <:ColoredObject
 end
 
 # Color
-function translate2pov(color :: Color)
+function povray_script(color :: Color)
     r = string(Float64(color.r))
     g = string(Float64(color.g))
     b = string(Float64(color.b))
     return "rgb<"*r*","*g*","*b*">"
 end
-function translate2pov(rgbcolor :: rgbColor)
-    return "object{"*translate2pov(rgbcolor.object)*" pigment{"*translate2pov(rgbcolor.color)*"}}"
+function povray_script(rgbcolor :: rgbColor)
+    return "object{"*povray_script(rgbcolor.object)*" pigment{"*povray_script(rgbcolor.color)*"}}"
 end
-function translate2pov(rgbftcolor :: rgbftColor)
+function povray_script(rgbftcolor :: rgbftColor)
     r = string(Float64(rgbftcolor.color.r))
     g = string(Float64(rgbftcolor.color.g))
     b = string(Float64(rgbftcolor.color.b))
     f = string(Float64(rgbftcolor.transparence.filter))
     t = string(Float64(rgbftcolor.transparence.transmit))
-    return "object{"*translate2pov(rgbftcolor.object)*" pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}}"
+    return "object{"*povray_script(rgbftcolor.object)*" pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}}"
 end
 
+export Transparent
 function Transparent(object::PrimitiveObject,ft::FT)
     return object
 end

@@ -6,7 +6,7 @@ using Printf
 include("_BasicFunctions.jl")
 
 ## Translation to POV-Ray code
-function translate2pov(x::Real)
+function povray_script(x::Real)
     if (isfinite(x))
         return @sprintf "%1.24f" x
     else
@@ -14,8 +14,8 @@ function translate2pov(x::Real)
     end
 end
 
-function translate2pov(x::Array{T,1}) where T <: Real
-    y=repr(translate2pov.(x))
+function povray_script(x::Array{T,1}) where T <: Real
+    y=repr(povray_script.(x))
     y=replace(y,"\""=>"")
     return "<"*y[2:end-1]*">"
 end
@@ -32,6 +32,7 @@ include("_CompoundObject.jl")
 include("_Camera.jl")
 
 # Rendering
+export render
 function render(object::Object; name="new", index::Int=0, camera::Camera=LngLatCamera(), lights::Array{T,1}=Light[]) where T <: Light
     width=camera.width
     height=camera.height
@@ -50,10 +51,10 @@ function render(object::Object; name="new", index::Int=0, camera::Camera=LngLatC
     end
 
     str = "#version 3.7;\nglobal_settings{assumed_gamma 1.0}\n"
-    str = str*translate2pov(camera)*"\n"
-    str = str*(join(translate2pov.(lights)))
+    str = str*povray_script(camera)*"\n"
+    str = str*(join(povray_script.(lights)))
     str = str*"background{rgb<1,1,1>}"*"\n"
-    str = str*translate2pov(object)*"\n"
+    str = str*povray_script(object)*"\n"
     io = open(Name,"w")
     write(io,str)
     close(io)

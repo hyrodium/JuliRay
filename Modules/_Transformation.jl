@@ -52,16 +52,17 @@ struct Scaling <:TransformedObject
     end
 end
 
-function translate2pov(affinetransform :: AffineTransform)
-    return "object{"*translate2pov(affinetransform.object)*" matrix "*translate2pov(vcat(reshape(affinetransform.A,9),affinetransform.b))*"}"
+function povray_script(affinetransform :: AffineTransform)
+    return "object{"*povray_script(affinetransform.object)*" matrix "*povray_script(vcat(reshape(affinetransform.matrix,9),affinetransform.vector))*"}"
 end
-function translate2pov(paralleltranslation :: ParallelTranslation)
-    return "object{"*translate2pov(paralleltranslation.object)*" translate "*translate2pov(paralleltranslation.b)*"}"
+function povray_script(paralleltranslation :: ParallelTranslation)
+    return "object{"*povray_script(paralleltranslation.object)*" translate "*povray_script(paralleltranslation.vector)*"}"
 end
-function translate2pov(scaling :: Scaling)
-    return "object{"*translate2pov(scaling.object)*" scale "*translate2pov(scaling.k)*"}"
+function povray_script(scaling :: Scaling)
+    return "object{"*povray_script(scaling.object)*" scale "*povray_script(scaling.scalar)*"}"
 end
 
+export Rotate
 function Rotate(object::Object, v::RealVector, θ::Real, fixedpoint::RealVector=[0.0,0.0,0.0])
     return AffineTransform(object,rotatematrix(v,θ),fixedpoint=fixedpoint)
 end

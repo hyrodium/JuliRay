@@ -170,27 +170,27 @@ struct Polygon <: PrimitiveObject
     end
 end
 
-function translate2pov(sphere :: Sphere)
-    return "sphere{"*translate2pov(sphere.center)*","*translate2pov(sphere.radius)*"}"
+function povray_script(sphere :: Sphere)
+    return "sphere{"*povray_script(sphere.center)*","*povray_script(sphere.radius)*"}"
 end
-function translate2pov(cylinder :: Cylinder)
-    return "cylinder{"*translate2pov(cylinder.end1)*","*translate2pov(cylinder.end2)*","*translate2pov(cylinder.radius)*"}"
+function povray_script(cylinder :: Cylinder)
+    return "cylinder{"*povray_script(cylinder.end1)*","*povray_script(cylinder.end2)*","*povray_script(cylinder.radius)*"}"
 end
-function translate2pov(cone :: Cone)
-    return "cone{"*translate2pov(cone.end1)*","*translate2pov(cone.radius)*","*translate2pov(cone.end2)*",0}"
+function povray_script(cone :: Cone)
+    return "cone{"*povray_script(cone.end1)*","*povray_script(cone.radius)*","*povray_script(cone.end2)*",0}"
 end
-function translate2pov(box :: Box)
-    return "box{"*translate2pov(box.vertex1)*","*translate2pov(box.vertex2)*"}"
+function povray_script(box :: Box)
+    return "box{"*povray_script(box.vertex1)*","*povray_script(box.vertex2)*"}"
 end
-function translate2pov(disc :: Disc)
-    return "disc{"*translate2pov(disc.center)*","*translate2pov(disc.normal)*","*translate2pov(disc.radius)*"}"
+function povray_script(disc :: Disc)
+    return "disc{"*povray_script(disc.center)*","*povray_script(disc.normal)*","*povray_script(disc.radius)*"}"
 end
-function translate2pov(torus :: Torus)
-    return "torus{"*translate2pov(torus.radius1)*","*translate2pov(torus.radius2)*"}"
+function povray_script(torus :: Torus)
+    return "torus{"*povray_script(torus.radius1)*","*povray_script(torus.radius2)*"}"
 end
-function translate2pov(polygon :: Polygon)
+function povray_script(polygon :: Polygon)
     n=length(polygon.vertices)
-    return "polygon{"*translate2pov(n)* (*(reshape([(repeat([","],n),translate2pov.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
+    return "polygon{"*povray_script(n)* (*(reshape([(repeat([","],n),povray_script.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
 end
 
 import Base: isempty

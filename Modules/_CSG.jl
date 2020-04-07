@@ -123,21 +123,21 @@ struct csgBound <: csgObject
     end
 end
 
-function translate2pov(csg :: csgUnion)
-    return "union{"* *(translate2pov.(csg.objects)...)*"}"
+function povray_script(csg :: csgUnion)
+    return "union{"* *(povray_script.(csg.objects)...)*"}"
 end
-function translate2pov(csg :: csgIntersection)
-    return "intersection{"* *(translate2pov.(csg.objects)...)*"}"
+function povray_script(csg :: csgIntersection)
+    return "intersection{"* *(povray_script.(csg.objects)...)*"}"
 end
-function translate2pov(csg :: csgMerge)
-    return "merge{"* *(translate2pov.(csg.objects)...)*"}"
+function povray_script(csg :: csgMerge)
+    return "merge{"* *(povray_script.(csg.objects)...)*"}"
 end
-function translate2pov(csg :: csgDifference)
-    return "difference{"* *(translate2pov.(csg.objects)...)*"}"
+function povray_script(csg :: csgDifference)
+    return "difference{"* *(povray_script.(csg.objects)...)*"}"
 end
-function translate2pov(csg :: csgClip)
-    return "object{"*translate2pov(csg.objects[1])*"clipped_by{"*translate2pov(csg.objects[2])*"}}"
+function povray_script(csg :: csgClip)
+    return "object{"*povray_script(csg.objects[1])*"clipped_by{"*povray_script(csg.objects[2])*"}}"
 end
-function translate2pov(csg :: csgBound)
-    return "object{"*translate2pov(csg.objects[1])*"bounded_by{"*translate2pov(csg.objects[2])*"}}"
+function povray_script(csg :: csgBound)
+    return "object{"*povray_script(csg.objects[1])*"bounded_by{"*povray_script(csg.objects[2])*"}}"
 end

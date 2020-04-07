@@ -11,19 +11,18 @@ struct PerspectiveCamera <: Camera
     width::Int
     height::Int
     color::Color
-    PerspectiveCamera(attitude,position,area,width,height,color)=
-    if area ≤ 0
-        error("area must be positive")
-    elseif area < 0
-        error("だめです")
-    elseif !isorthogonal(attitude)
-        error("だめです")
-    else
-        new(attitude,position,area,width,height,color)
+    function PerspectiveCamera(attitude,position,area,width,height,color)
+        if area ≤ 0
+            error("area must be positive")
+        elseif !isorthogonal(attitude)
+            error("だめです")
+        else
+            new(attitude,position,area,width,height,color)
+        end
     end
 end
 
-function translate2pov(camera::PerspectiveCamera)
+function povray_script(camera::PerspectiveCamera)
     e₁=camera.attitude[:,1]
     e₂=camera.attitude[:,2]
     e₃=camera.attitude[:,3]
@@ -32,11 +31,12 @@ function translate2pov(camera::PerspectiveCamera)
     right=-sqrt(camera.area*camera.width/camera.height)/2
     color=camera.color
     light=PointLight(position,color)
-    str="camera{perspective location "*translate2pov(position)*" right "*translate2pov(e₁*right)*" up "*translate2pov(e₂*up)*" direction "*translate2pov(e₃)*" sky "*translate2pov(e₂)*" look_at "*translate2pov(position-e₃)*"}\n"
-    str=str*translate2pov(light)
+    str="camera{perspective location "*povray_script(position)*" right "*povray_script(e₁*right)*" up "*povray_script(e₂*up)*" direction "*povray_script(e₃)*" sky "*povray_script(e₂)*" look_at "*povray_script(position-e₃)*"}\n"
+    str=str*povray_script(light)
     return str
 end
 
+export ParallelCamera
 struct ParallelCamera <: Camera
     attitude :: Array{Float64,2}
     position :: Array{Float64,1}
@@ -44,20 +44,18 @@ struct ParallelCamera <: Camera
     width::Int
     height::Int
     color::Color
-    PerspectiveCamera(attitude,position,area,width,height,color)=
-    if area ≤ 0
-        error("area must be positive")
-    elseif area < 0
-        error("だめです")
-    elseif !isorthogonal(attitude)
-        error("だめです")
-    else
-        new(attitude,position,area,width,height,color)
+    function PerspectiveCamera(attitude,position,area,width,height,color)
+        if area ≤ 0
+            error("area must be positive")
+        elseif !isorthogonal(attitude)
+            error("だめです")
+        else
+            new(attitude,position,area,width,height,color)
+        end
     end
 end
 
-
-
+export LngLatCamera
 function LngLatCamera(;lng=-π/2,lat=π/2,tilt=0,pers=0.1,zoom=1.0,lookat=[0.0,0.0,0.0],width::Int=500,height::Int=500,color::Color=RGB(1,1,1))
     e₃=[cos(lat)*cos(lng),cos(lat)*sin(lng),sin(lat)]
     e₁=rotatematrix(e₃,tilt)*[-sin(lng),cos(lng),0.0]
@@ -69,12 +67,13 @@ function LngLatCamera(;lng=-π/2,lat=π/2,tilt=0,pers=0.1,zoom=1.0,lookat=[0.0,0
 end
 
 # Light
+export PointLight
 struct PointLight <: Light
     position :: Array{Float64,1}
     color :: Color
 end
 
-function translate2pov(light::PointLight)
-    str="light_source{"*translate2pov(light.position)*" "*translate2pov(light.color)*"}"
+function povray_script(light::PointLight)
+    str="light_source{"*povray_script(light.position)*" "*povray_script(light.color)*"}"
     return str
 end
