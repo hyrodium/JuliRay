@@ -6,7 +6,6 @@ using Printf
 include("BasicFunctions.jl")
 
 ## Translation to POV-Ray code
-export translate2pov
 function translate2pov(x::Real)
     if (isfinite(x))
         return @sprintf "%1.24f" x
@@ -37,30 +36,30 @@ function render(object::Object;name="new", index::Int=0, camera::Camera=LngLatCa
     width=camera.width
     height=camera.height
 
-    if(0<index<1000000)
-        Index="_"*(@sprintf "%06d" index)
-    elseif(index==0)
-        Index=""
+    if 0 < index < 1000000
+        Index = "_"*(@sprintf "%06d" index)
+    elseif index == 0
+        Index = ""
     else
         error("index must be non-negative and less than 1000000")
     end
-    if(endswith(name,".pov"))
-        Name=name[1:end-4]*Index*".pov"
+    if endswith(name,".pov")
+        Name = name[1:end-4]*Index*".pov"
     else
-        Name=name*Index*".pov"
+        Name = name*Index*".pov"
     end
 
-    str="#version 3.7;\nglobal_settings{assumed_gamma 1.0}\n"
-    str=str*translate2pov(camera)*"\n"
-    str=str*(join(translate2pov.(lights)))
-    str=str*"background{rgb<1,1,1>}"*"\n"
-    str=str*translate2pov(object)*"\n"
-    io=open(Name,"w")
+    str = "#version 3.7;\nglobal_settings{assumed_gamma 1.0}\n"
+    str = str*translate2pov(camera)*"\n"
+    str = str*(join(translate2pov.(lights)))
+    str = str*"background{rgb<1,1,1>}"*"\n"
+    str = str*translate2pov(object)*"\n"
+    io = open(Name,"w")
     write(io,str)
     close(io)
 
-    str="Width=$width\nHeight=$height\nAntialias=On\n"
-    io=open("povray.ini","w")
+    str = "Width=$width\nHeight=$height\nAntialias=On\n"
+    io = open("povray.ini","w")
     write(io,str)
     close(io)
 

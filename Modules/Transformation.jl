@@ -5,32 +5,32 @@ abstract type TransformedObject <: Object end
 export AffineTransform
 struct AffineTransform <:TransformedObject
     object :: Object
-    A :: Array{Float64,2}
-    b :: Array{Float64,1}
-    function AffineTransform(object,A,b)
+    matrix :: Array{Float64,2}
+    vector :: Array{Float64,1}
+    function AffineTransform(object,matrix,vector)
         if object == Empty()
             Empty()
-        elseif (rank(A) ≤ 1)
+        elseif (rank(matrix) ≤ 1)
             Empty()
         else
-            new(object,A,b)
+            new(object,matrix,vector)
         end
     end
-    function AffineTransform(object::Object, A::RealMatrix; fixedpoint=[0.0,0.0,0.0])
-        b = fixedpoint-A*fixedpoint
-        return AffineTransform(object,A,b)
+    function AffineTransform(object::Object, matrix::RealMatrix; fixedpoint=[0.0,0.0,0.0])
+        vector = fixedpoint - matrix*fixedpoint
+        return AffineTransform(object,matrix,vector)
     end
 end
 
 export ParallelTranslation
 struct ParallelTranslation <:TransformedObject
     object :: Object
-    b :: Array{Float64,1}
-    function ParallelTranslation(object,b)
+    vector :: Array{Float64,1}
+    function ParallelTranslation(object,vector)
         if object == Empty()
             Empty()
         else
-            new(object,b)
+            new(object,vector)
         end
     end
 end
@@ -38,21 +38,17 @@ end
 export Scaling
 struct Scaling <:TransformedObject
     object :: Object
-    k :: Float64
-    function Scaling(object, k; fixedpoint=[0.0,0.0,0.0])
+    scalar :: Float64
+    function Scaling(object, scalar; fixedpoint=[0.0,0.0,0.0])
         if object == Empty()
             Empty()
-        elseif k == 0
+        elseif scalar == 0
             Empty()
         elseif norm(fixedpoint) ≠ 0
-            new(ParallelTranslation(object,fixedpoint*(1-k)/k),k)
+            new(ParallelTranslation(object,fixedpoint*(1-scalar)/scalar),scalar)
         else
-            new(object,k)
+            new(object,scalar)
         end
-    end
-    function Scaling(object::Object,k)
-        b=fixedpoint-k*fixedpoint
-        return ParallelTranslation(Scaling(object,k),b)
     end
 end
 
