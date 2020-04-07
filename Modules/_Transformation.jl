@@ -63,7 +63,7 @@ function povray_script(scaling :: Scaling)
 end
 
 export Rotate
-function Rotate(object::Object, v::RealVector, θ::Real, fixedpoint::RealVector=[0.0,0.0,0.0])
+function Rotate(object::Object, v::RealVector, θ::Real; fixedpoint::RealVector=[0.0,0.0,0.0])
     return AffineTransform(object,rotatematrix(v,θ),fixedpoint=fixedpoint)
 end
 

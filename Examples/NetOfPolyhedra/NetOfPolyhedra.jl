@@ -6,11 +6,25 @@ using JuliRay
 
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
 
-function POLYGON(vertices;r1=1.0,r2=0.05,r3=0.025)
+function POLYGON2(vertices,O,R;r1=1.0,r2=0.05,r3=0.025)
     n=length(vertices)
+    C=O+R*normalize(+(vertices...)/n-O)
     V=rgbColor(csgUnion((p->Sphere(p,r2)).(vertices)),RGB(0.1,0.1,0.1))
-    E=rgbColor(csgUnion([Cylinder(vertices[i],vertices[mod(i,n)+1],r3) for i in 1:n]),RGB(0.1,0.1,0.1))
-    F=rgbftColor(Polygon(vertices),RGB(0.5,1,1),FT(0.1,0.1))
+    E=rgbColor(csgUnion([Arc(vertices[i],O+R*normalize((vertices[i]+vertices[mod(i,n)+1])/2-O),vertices[mod(i,n)+1],r3) for i in 1:n]),RGB(0.1,0.1,0.1))
+    if(R<10^2)
+        F=csgClip(
+            rgbftColor(
+                Sphere(O,R),RGB(1,0.5,1),FT(0.1,0.1)
+            ),
+            csgIntersection(
+                [
+                    (v=JuliRay.NormalVector(O,vertices[i],vertices[mod(i,n)+1]);s=sign(dot(v,C-O));Cylinder(O,O+s*R*v,R))
+                for i ∈ 1:n]
+            )
+        )
+    else
+        F=rgbftColor(Polygon(vertices),RGB(1,0.5,1),FT(0.1,0.1))
+    end
     return csgUnion(V,E,F)
 end
 
@@ -60,8 +74,8 @@ for i ∈ 1:M
     F[3]=Put(F[2],2,O)
     F[4]=Put(F[2],3,O)
 
-    object=csgUnion([POLYGON(F[i],r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
-    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Np"*string(m),index=i)
+    object=csgUnion([POLYGON2(F[i],O,R,r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
+    render(csgUnion(object),camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Ns"*string(m),index=i)
 end
 
 ## Cube
@@ -85,8 +99,8 @@ for i ∈ 1:M
     F[5]=Put(F[4],3,O)
     F[6]=Put(F[5],1,O)
 
-    object=csgUnion([POLYGON(F[i],r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
-    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Np"*string(m),index=i)
+    object=csgUnion([POLYGON2(F[i],O,R,r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
+    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Ns"*string(m),index=i)
 end
 
 ## Octahedron
@@ -112,8 +126,8 @@ for i ∈ 1:M
     F[7]=Put(F[6],3,O)
     F[8]=Put(F[7],2,O)
 
-    object=csgUnion([POLYGON(F[i],r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
-    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Np"*string(m),index=i)
+    object=csgUnion([POLYGON2(F[i],O,R,r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
+    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Ns"*string(m),index=i)
 end
 
 ## Dodecahedron
@@ -146,8 +160,8 @@ for i ∈ 1:M
     F[11]=Put(F[8],3,O)
     F[12]=Put(F[8],4,O)
 
-    object=csgUnion([POLYGON(F[i],r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
-    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Np"*string(m),index=i)
+    object=csgUnion([POLYGON2(F[i],O,R,r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
+    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Ns"*string(m),index=i)
 end
 
 ## Icosahedron
@@ -188,6 +202,6 @@ for i ∈ 1:M
     F[19]=Put(F[9],3,O)
     F[20]=Put(F[10],1,O)
 
-    object=csgUnion([POLYGON(F[i],r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
-    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Np"*string(m),index=i)
+    object=csgUnion([POLYGON2(F[i],O,R,r2=0.03,r3=0.01) for i ∈ 1:m]) # 頂点座標をもとにオブジェクトを生成
+    render(object,camera=LngLatCamera(lng=30°,lat=30°,pers=0.2,zoom=0.2,width=640,height=360),name="Ns"*string(m),index=i)
 end
