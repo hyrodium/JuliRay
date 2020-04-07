@@ -3,7 +3,7 @@ module JuliRay
 using LinearAlgebra
 using Printf
 
-include("BasicFunctions.jl")
+include("_BasicFunctions.jl")
 
 ## Translation to POV-Ray code
 function translate2pov(x::Real)
@@ -24,15 +24,15 @@ end
 abstract type JR end
 abstract type Object <: JR end
 
-include("PrimitiveObject.jl")
-include("CSG.jl")
-include("Transformation.jl")
-include("Pigment.jl")
-include("CompoundObject.jl")
-include("Camera.jl")
+include("_PrimitiveObject.jl")
+include("_CSG.jl")
+include("_Transformation.jl")
+include("_Pigment.jl")
+include("_CompoundObject.jl")
+include("_Camera.jl")
 
 # Rendering
-function render(object::Object;name="new", index::Int=0, camera::Camera=LngLatCamera(), lights::Array{T,1}=Light[]) where T <: Light
+function render(object::Object; name="new", index::Int=0, camera::Camera=LngLatCamera(), lights::Array{T,1}=Light[]) where T <: Light
     width=camera.width
     height=camera.height
 
