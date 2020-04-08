@@ -87,8 +87,11 @@ function Transparent(rgbftcolor::rgbftColor,ft::FT)
     return rgbftColor(rgbftcolor.object,rgbftcolor.color,FT(f2,t2))
 end
 function Transparent(affinetransform::AffineTransform,ft::FT)
-    return AffineTransform(Transparent(affinetransform.object,ft),affinetransform.A,affinetransform.b)
+    return AffineTransform(Transparent(affinetransform.object,ft),affinetransform.matrix, affinetransform.vector)
 end
-function Transparent(affinetransform::ParallelTranslation,ft::FT)
-    return ParallelTranslation(Transparent(affinetransform.object,ft),affinetransform.b)
+function Transparent(paralleltranslation::ParallelTranslation,ft::FT)
+    return ParallelTranslation(Transparent(paralleltranslation.object,ft),paralleltranslation.vector)
+end
+function Transparent(scaling::Scaling,ft::FT)
+    return Scaling(Transparent(scaling.object,ft),scaling.scalar)
 end
