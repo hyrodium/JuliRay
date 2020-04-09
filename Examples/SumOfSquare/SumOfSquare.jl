@@ -1,17 +1,14 @@
 push!(LOAD_PATH, "Modules")
 using Colors
-using Revise
 using JuliRay
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
 
-function f(x)
-    ifelse(x>0,exp(-1/x),0)
-end
 function Smooth(x::Real)
-    f(2x/√3)/(f(2x/√3)+f(2/√3-2x/√3))
+    f(x) = ifelse(x>0,exp(-1/x),0)
+    return f(2x/√3)/(f(2x/√3)+f(2/√3-2x/√3))
 end
 function Smooth(a::Real, b::Real, x::Real)
-    Smooth((x-a)/(b-a))
+    return Smooth((x-a)/(b-a))
 end
 function Smooth(dict::Dict{A,B} where A <: Real where B <: Any, t::Real)
     T=sort(collect(keys(dict)))
