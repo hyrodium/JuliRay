@@ -74,7 +74,7 @@ f₂=[e₂,e₃,e₆]
 f₃=[e₁,e₃,e₅]
 f₄=[e₁,e₂,e₄]
 c₁=[f₁,f₂,f₃,f₄]
-const F₄=normalize.(POINTS), c₁
+F₄=normalize.(POINTS), c₁
 
 # F₆
 𝒑₁=[1,1,1]
@@ -113,9 +113,9 @@ f₄=[e₄,e₅,e₈,e₁₁]
 f₅=[e₆,e₇,e₈,e₁₂]
 f₆=[e₉,e₁₀,e₁₁,e₁₂]
 c₁=[f₁,f₂,f₃,f₄,f₅,f₆]
-const F₆=normalize.(POINTS), c₁
+F₆=normalize.(POINTS), c₁
 
-const F₈=DualRegularPlolyhedron(F₆...)
+F₈=DualRegularPlolyhedron(F₆...)
 
 # F₁₂
 𝒑₁=[1,1,1]
@@ -202,6 +202,6 @@ f₁₀=[e₆,e₇,e₂₂,e₂₄,e₂₅]
 f₁₁=[e₃,e₄,e₂₆,e₂₈,e₃₀]
 f₁₂=[e₈,e₉,e₂₇,e₂₉,e₃₀]
 c₁=[f₁,f₂,f₃,f₄,f₅,f₆,f₇,f₈,f₉,f₁₀,f₁₁,f₁₂]
-const F₁₂=normalize.(POINTS), c₁
+F₁₂=normalize.(POINTS), c₁
 
-const F₂₀=DualRegularPlolyhedron(F₁₂...)
+F₂₀=DualRegularPlolyhedron(F₁₂...)

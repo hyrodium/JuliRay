@@ -1,6 +1,7 @@
 push!(LOAD_PATH, "Modules")
 using LinearAlgebra
 using Colors
+using Revise
 using JuliRay
 
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
@@ -65,7 +66,8 @@ m=6 # m面体
 M=80 # アニメーションの刻み数
 
 r1=√(1-h^2) # n角形の外接円半径
-for i ∈ 1:M
+
+for i ∈ 20# 1:M
     t=3(i-1)/M
     θ=(1-Smooth(0.5,1.4,t)+Smooth(1.6,2.5,t))*π/2 # パラメータθは0 → π/2 → 0の順で滑らかに変化
     R=1/cos(θ)

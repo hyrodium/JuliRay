@@ -1,6 +1,5 @@
 push!(LOAD_PATH, "Modules")
 using Colors
-using Revise
 using IntervalSets
 using JuliRay
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))

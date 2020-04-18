@@ -123,21 +123,45 @@ struct csgBound <: csgObject
     end
 end
 
-function povray_script(csg :: csgUnion)
-    return "union{"* *(povray_script.(csg.objects)...)*"}"
+function povray_script(csg :: csgUnion; preindent = 0)
+    script = "union{\n" * "  "^(preindent+1)
+    for object in csg.objects
+        script *= povray_script(object; preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    end
+    script = script[1:end-2] * "}"
+    return script
 end
-function povray_script(csg :: csgIntersection)
-    return "intersection{"* *(povray_script.(csg.objects)...)*"}"
+
+function povray_script(csg :: csgIntersection; preindent = 0)
+    script = "intersection{\n" * "  "^(preindent+1)
+    for object in csg.objects
+        script *= povray_script(object; preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    end
+    script = script[1:end-2] * "}"
+    return script
 end
-function povray_script(csg :: csgMerge)
-    return "merge{"* *(povray_script.(csg.objects)...)*"}"
+
+function povray_script(csg :: csgMerge; preindent = 0)
+    script = "merge{\n" * "  "^(preindent+1)
+    for object in csg.objects
+        script *= povray_script(object; preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    end
+    script = script[1:end-2] * "}"
+    return script
 end
-function povray_script(csg :: csgDifference)
-    return "difference{"* *(povray_script.(csg.objects)...)*"}"
+
+function povray_script(csg :: csgDifference; preindent = 0)
+    script = "difference{\n" * "  "^(preindent+1)
+    for object in csg.objects
+        script *= povray_script(object; preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    end
+    script = script[1:end-2] * "}"
+    return script
 end
-function povray_script(csg :: csgClip)
+
+function povray_script(csg :: csgClip; preindent = 0)
     return "object{"*povray_script(csg.objects[1])*"clipped_by{"*povray_script(csg.objects[2])*"}}"
 end
-function povray_script(csg :: csgBound)
+function povray_script(csg :: csgBound; preindent = 0)
     return "object{"*povray_script(csg.objects[1])*"bounded_by{"*povray_script(csg.objects[2])*"}}"
 end

@@ -170,32 +170,31 @@ struct Polygon <: PrimitiveObject
     end
 end
 
-function povray_script(sphere :: Sphere)
+function povray_script(sphere :: Sphere; preindent = 0)
     return "sphere{"*povray_script(sphere.center)*","*povray_script(sphere.radius)*"}"
 end
-function povray_script(cylinder :: Cylinder)
+function povray_script(cylinder :: Cylinder; preindent = 0)
     return "cylinder{"*povray_script(cylinder.end1)*","*povray_script(cylinder.end2)*","*povray_script(cylinder.radius)*"}"
 end
-function povray_script(cone :: Cone)
+function povray_script(cone :: Cone; preindent = 0)
     return "cone{"*povray_script(cone.end1)*","*povray_script(cone.radius)*","*povray_script(cone.end2)*",0}"
 end
-function povray_script(box :: Box)
+function povray_script(box :: Box; preindent = 0)
     return "box{"*povray_script(box.vertex1)*","*povray_script(box.vertex2)*"}"
 end
-function povray_script(disc :: Disc)
+function povray_script(disc :: Disc; preindent = 0)
     return "disc{"*povray_script(disc.center)*","*povray_script(disc.normal)*","*povray_script(disc.radius)*"}"
 end
-function povray_script(torus :: Torus)
+function povray_script(torus :: Torus; preindent = 0)
     return "torus{"*povray_script(torus.radius1)*","*povray_script(torus.radius2)*"}"
 end
-function povray_script(polygon :: Polygon)
-    n=length(polygon.vertices)
-    # return "polygon{"*povray_script(n)* (*(reshape([(repeat([","],n), povray_script.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
+function povray_script(polygon :: Polygon; preindent = 0)
+    n = length(polygon.vertices)
     return "polygon{" * povray_script(n) * ", " * povray_script(polygon.vertices) * "}"
 end
 
 import Base: isempty
 
 function isempty(object::Object)
-    return repr(object)=="Empty()"
+    return repr(object) == "Empty()"
 end

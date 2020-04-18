@@ -28,3 +28,6 @@ POV-Ray wrapper for Julia language.
 
 ### Sum of square numbers
 ![](Examples/SumOfSquare/SumOfSquare.gif)
+
+### Paraboloid
+![](Examples/Paraboloid/Paraboloid.png)

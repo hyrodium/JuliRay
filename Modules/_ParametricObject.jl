@@ -78,7 +78,7 @@ function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindnet=0)
     mesh2 *= "    " * povray_script([F3...]) * "\n"
     mesh2 *= "    " * povray_script([F4...]) * "\n"
     mesh2 *= "  }\n"
-    mesh2 *= "}\n"
+    mesh2 *= "}"
 
     return mesh2
 end

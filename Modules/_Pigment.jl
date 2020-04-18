@@ -53,16 +53,27 @@ function povray_script(color :: Color)
     b = string(Float64(color.b))
     return "rgb<"*r*","*g*","*b*">"
 end
-function povray_script(rgbcolor :: rgbColor)
-    return "object{"*povray_script(rgbcolor.object)*" pigment{"*povray_script(rgbcolor.color)*"}}"
+
+function povray_script(rgbcolor :: rgbColor; preindent = 0)
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(rgbcolor.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "pigment{" * povray_script(rgbcolor.color) * "}" * "\n" * "  "^preindent
+    script *= "}"
+    return script
 end
-function povray_script(rgbftcolor :: rgbftColor)
+
+function povray_script(rgbftcolor :: rgbftColor; preindent = 0)
     r = string(Float64(rgbftcolor.color.r))
     g = string(Float64(rgbftcolor.color.g))
     b = string(Float64(rgbftcolor.color.b))
     f = string(Float64(rgbftcolor.transparence.filter))
     t = string(Float64(rgbftcolor.transparence.transmit))
-    return "object{"*povray_script(rgbftcolor.object)*" pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}}"
+
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(rgbftcolor.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}" * "\n" * "  "^preindent
+    script *= "}"
+    return script
 end
 
 export Transparent

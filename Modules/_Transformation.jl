@@ -52,14 +52,28 @@ struct Scaling <: TransformedObject
     end
 end
 
-function povray_script(affinetransform :: AffineTransform)
-    return "object{"*povray_script(affinetransform.object)*" matrix "*povray_script(vcat(reshape(affinetransform.matrix,9),affinetransform.vector))*"}"
+function povray_script(affinetransform :: AffineTransform; preindent = 0)
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(affinetransform.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "matrix " * povray_script(vcat(reshape(affinetransform.matrix,9),affinetransform.vector)) * "\n" * "  "^preindent
+    script *= "}"
+    return script
 end
-function povray_script(paralleltranslation :: ParallelTranslation)
-    return "object{"*povray_script(paralleltranslation.object)*" translate "*povray_script(paralleltranslation.vector)*"}"
+
+function povray_script(paralleltranslation :: ParallelTranslation; preindent = 0)
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(paralleltranslation.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "translate "*povray_script(paralleltranslation.vector) * "\n" * "  "^preindent
+    script *= "}"
+    return script
 end
-function povray_script(scaling :: Scaling)
-    return "object{"*povray_script(scaling.object)*" scale "*povray_script(scaling.scalar)*"}"
+
+function povray_script(scaling :: Scaling; preindent = 0)
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(scaling.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "scale "*povray_script(scaling.scalar) * "\n" * "  "^preindent
+    script *= "}"
+    return script
 end
 
 export Rotate
