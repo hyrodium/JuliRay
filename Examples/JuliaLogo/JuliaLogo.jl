@@ -1,6 +1,5 @@
 push!(LOAD_PATH, "Modules")
 using Colors
-using Revise
 using JuliRay
 
 a=rgbColor(Sphere([2,-1,-1]/3,0.6),RGB(1,0,0))

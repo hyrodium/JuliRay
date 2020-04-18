@@ -1,7 +1,6 @@
 push!(LOAD_PATH, "Modules")
 using LinearAlgebra
 using Colors
-using Revise
 using JuliRay
 
 Base.@irrational ° 0.0174532925199432957692369076848861271344 (big(pi)/big(180))
@@ -27,7 +26,7 @@ function POLYGON(vertices;r1=1.0,r2=0.05,r3=0.025)
     n=length(vertices)
     V=rgbColor(csgUnion((p->Sphere(p,r2)).(vertices)),RGB(0.1,0.1,0.1))
     E=rgbColor(csgUnion([Cylinder(vertices[i],vertices[mod(i,n)+1],r3) for i in 1:n]),RGB(0.1,0.1,0.1))
-    F=rgbftColor(Polygon(vertices),RGB(0.5,1,1),FT(0.1,0.1))
+    F=rgbftColor(Polygon(vertices),RGB(0.5,0.5,1),FT(0.1,0.1))
     return csgUnion(V,E,F)
 end
 
@@ -67,7 +66,7 @@ M=80 # アニメーションの刻み数
 
 r1=√(1-h^2) # n角形の外接円半径
 
-for i ∈ 20# 1:M
+for i ∈ 1:M
     t=3(i-1)/M
     θ=(1-Smooth(0.5,1.4,t)+Smooth(1.6,2.5,t))*π/2 # パラメータθは0 → π/2 → 0の順で滑らかに変化
     R=1/cos(θ)
