@@ -3,7 +3,7 @@
 abstract type TransformedObject <: Object end
 
 export AffineTransform
-struct AffineTransform <:TransformedObject
+struct AffineTransform <: TransformedObject
     object :: Object
     matrix :: Array{Float64,2}
     vector :: Array{Float64,1}
@@ -23,7 +23,7 @@ struct AffineTransform <:TransformedObject
 end
 
 export ParallelTranslation
-struct ParallelTranslation <:TransformedObject
+struct ParallelTranslation <: TransformedObject
     object :: Object
     vector :: Array{Float64,1}
     function ParallelTranslation(object,vector)
@@ -36,7 +36,7 @@ struct ParallelTranslation <:TransformedObject
 end
 
 export Scaling
-struct Scaling <:TransformedObject
+struct Scaling <: TransformedObject
     object :: Object
     scalar :: Float64
     function Scaling(object, scalar; fixedpoint=[0.0,0.0,0.0])

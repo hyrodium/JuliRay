@@ -190,7 +190,8 @@ function povray_script(torus :: Torus)
 end
 function povray_script(polygon :: Polygon)
     n=length(polygon.vertices)
-    return "polygon{"*povray_script(n)* (*(reshape([(repeat([","],n),povray_script.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
+    # return "polygon{"*povray_script(n)* (*(reshape([(repeat([","],n), povray_script.(polygon.vertices))[i][j] for i in 1:2, j in 1:n],2n)...))*"}"
+    return "polygon{" * povray_script(n) * ", " * povray_script(polygon.vertices) * "}"
 end
 
 import Base: isempty
