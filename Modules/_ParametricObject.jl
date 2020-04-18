@@ -11,22 +11,21 @@ struct ParametricSurface <: PrimitiveObject
     D1 :: Interval{:closed,:closed,Float64}
     D2 :: Interval{:closed,:closed,Float64}
     mesh :: Tuple{Int,Int}
-    function ParametricSurface(parametrization::Function, D1::Interval, D2::Interval; mesh::Tuple{Int,Int}=(10,10))
-        new(parametrization, ClosedInterval(D1), ClosedInterval(D2), mesh)
+    smooth :: Bool
+    function ParametricSurface(parametrization::Function, D1::Interval, D2::Interval; mesh::Tuple{Int,Int}=(10,10), smooth=true)
+        new(parametrization, ClosedInterval(D1), ClosedInterval(D2), mesh, smooth)
     end
 end
 
-function povray_script(parametricsurface::ParametricSurface)
-    name = randstring()
-    name = "mesh2.inc"
-    path = BASE_DIR * name
+function povray_script(parametricsurface::ParametricSurface; preindent=0)
     𝒑 = parametricsurface.parametrization
     D1, D2 = parametricsurface.D1, parametricsurface.D2
     mesh = parametricsurface.mesh
-    return mesh2(𝒑, D1, D2; mesh=mesh, smooth = true)
+    smooth = parametricsurface.smooth
+    return mesh2(𝒑, D1, D2; mesh=mesh, smooth=smooth, preindent=preindent)
 end
 
-function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindnet=0)
+function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindent=0)
     n1, n2 = mesh
     D1₋, D1₊ = endpoints(D1)
     D2₋, D2₊ = endpoints(D2)
@@ -59,26 +58,30 @@ function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindnet=0)
 
     Ns = [1,2,3]
 
-    mesh2 = ""
-    mesh2 *= "mesh2{\n"
-    mesh2 *= "  vertex_vectors{\n"
-    mesh2 *= "    " * povray_script(np) * ", \n"
-    mesh2 *= "    " * povray_script([𝒑s...]) * ", \n"
-    mesh2 *= "    " * povray_script([𝒑c...]) * "\n"
-    mesh2 *= "  }\n"
-    mesh2 *= "  normal_vectors{\n"
-    mesh2 *= "    " * povray_script(np) * ", \n"
-    mesh2 *= "    " * povray_script([𝒆s...]) * ", \n"
-    mesh2 *= "    " * povray_script([𝒆c...]) * "\n"
-    mesh2 *= "  }\n"
-    mesh2 *= "  face_indices{\n"
-    mesh2 *= "    " * povray_script(nf) * ", \n"
-    mesh2 *= "    " * povray_script([F1...]) * "\n"
-    mesh2 *= "    " * povray_script([F2...]) * "\n"
-    mesh2 *= "    " * povray_script([F3...]) * "\n"
-    mesh2 *= "    " * povray_script([F4...]) * "\n"
-    mesh2 *= "  }\n"
-    mesh2 *= "}"
+    script = ""
+    script *= "mesh2{\n" * "  "^(preindent)
+    script *= "  vertex_vectors{\n" * "  "^(preindent)
+    script *= "    " * povray_script(np) * ", \n" * "  "^(preindent)
+    script *= "    " * povray_script([𝒑s...]) * ", \n" * "  "^(preindent)
+    script *= "    " * povray_script([𝒑c...]) * "\n" * "  "^(preindent)
+    script *= "  }\n" * "  "^(preindent)
 
-    return mesh2
+    if smooth
+        script *= "  normal_vectors{\n" * "  "^(preindent)
+        script *= "    " * povray_script(np) * ", \n" * "  "^(preindent)
+        script *= "    " * povray_script([𝒆s...]) * ", \n" * "  "^(preindent)
+        script *= "    " * povray_script([𝒆c...]) * "\n" * "  "^(preindent)
+        script *= "  }\n" * "  "^(preindent)
+    end
+
+    script *= "  face_indices{\n" * "  "^(preindent)
+    script *= "    " * povray_script(nf) * ", \n" * "  "^(preindent)
+    script *= "    " * povray_script([F1...]) * "\n" * "  "^(preindent)
+    script *= "    " * povray_script([F2...]) * "\n" * "  "^(preindent)
+    script *= "    " * povray_script([F3...]) * "\n" * "  "^(preindent)
+    script *= "    " * povray_script([F4...]) * "\n" * "  "^(preindent)
+    script *= "  }\n" * "  "^(preindent)
+    script *= "}"
+
+    return script
 end

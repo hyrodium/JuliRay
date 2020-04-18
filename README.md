@@ -30,4 +30,6 @@ POV-Ray wrapper for Julia language.
 ![](Examples/SumOfSquare/SumOfSquare.gif)
 
 ### Paraboloid
-![](Examples/Paraboloid/Paraboloid.png)
+![](Examples/Paraboloid/Paraboloid.gif)
+
+### Isometric transformation between catenoid and helicoid
