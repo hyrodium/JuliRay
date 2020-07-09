@@ -45,8 +45,6 @@ function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindent=0)
 
     Ns(i1, i2) = i1 + (n1+1) * (i2-1)
     Nc(i1, i2) = i1 + n1 * (i2-1)
-    # [ts...][Ns(8,11)] == ts[8,11]
-    # [tc...][Nc(8,11)] == tc[8,11]
 
     F1 = [[Ns(i1,i2)-1, Ns(i1+1,i2)-1, (n1+1)*(n2+1)+Nc(i1,i2)-1] for i1 in 1:n1, i2 in 1:n2]
     F2 = [[Ns(i1,i2)-1, Ns(i1,i2+1)-1, (n1+1)*(n2+1)+Nc(i1,i2)-1] for i1 in 1:n1, i2 in 1:n2]
@@ -55,8 +53,6 @@ function mesh2(𝒑, D1, D2; mesh=(10,10), smooth=true, preindent=0)
 
     np = (n1+1)*(n2+1) + n1*n2
     nf = 4*n1*n2
-
-    Ns = [1,2,3]
 
     script = ""
     script *= "mesh2{\n" * "  "^(preindent)

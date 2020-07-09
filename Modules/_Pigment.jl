@@ -46,6 +46,23 @@ struct rgbftColor <:ColoredObject
     end
 end
 
+export rgbftColor2
+struct rgbftColor2 <:ColoredObject
+    object :: Object
+    color :: Color
+    transparence :: FT
+
+    function rgbftColor2(object,color,ft)
+        if object == Empty()
+            Empty()
+        else
+            new(object,color,ft)
+        end
+    end
+end
+
+
+
 # Color
 function povray_script(color :: Color)
     r = string(Float64(color.r))
@@ -75,6 +92,23 @@ function povray_script(rgbftcolor :: rgbftColor; preindent = 0)
     script *= "}"
     return script
 end
+
+function povray_script(rgbftcolor :: rgbftColor2; preindent = 0)
+    r = string(Float64(rgbftcolor.color.r))
+    g = string(Float64(rgbftcolor.color.g))
+    b = string(Float64(rgbftcolor.color.b))
+    f = string(Float64(rgbftcolor.transparence.filter))
+    t = string(Float64(rgbftcolor.transparence.transmit))
+
+    script = "object{\n" * "  "^(preindent+1)
+    script *= povray_script(rgbftcolor.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)
+    script *= "texture{pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}}" * "\n" * "  "^preindent
+    script *= "texture{pigment{rgbft<"*r*","*g*","*b*","*f*","*t*">}}" * "\n" * "  "^preindent
+    script *= "}"
+    return script
+end
+
+
 
 export Transparent
 function Transparent(object::PrimitiveObject,ft::FT)
@@ -106,3 +140,4 @@ end
 function Transparent(scaling::Scaling,ft::FT)
     return Scaling(Transparent(scaling.object,ft),scaling.scalar)
 end
+#TODO: Transparent for rgbftColors
