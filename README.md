@@ -34,3 +34,12 @@ POV-Ray wrapper for Julia language.
 
 ### Isometric transformation between catenoid and helicoid
 ![](Examples/Paraboloid/CatenoidHelicoid.gif)
+
+### Isometric transformation between catenoid and helicoid
+![](Examples/BezierSurface/BezierSurfaceLocus.png)
+
+![](Examples/BezierSurface/Locus1.gif)
+![](Examples/BezierSurface/Locus2.gif)
+
+![](Examples/BezierSurface/DaincingBezierSurface1.gif)
+![](Examples/BezierSurface/DaincingBezierSurface2.gif)
