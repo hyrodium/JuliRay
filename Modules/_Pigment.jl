@@ -71,6 +71,15 @@ function povray_script(color :: Color)
     return "rgb<"*r*","*g*","*b*">"
 end
 
+function povray_script(color :: Color, ft:: FT)
+    r = string(Float64(color.r))
+    g = string(Float64(color.g))
+    b = string(Float64(color.b))
+    f = string(Float64(ft.filter))
+    t = string(Float64(ft.transmit))
+    return "rgbft<"*r*","*g*","*b*","*f*","*t*">"
+end
+
 function povray_script(rgbcolor :: rgbColor; preindent = 0)
     script = "object{\n" * "  "^(preindent+1)
     script *= povray_script(rgbcolor.object, preindent=preindent+1) * "\n" * "  "^(preindent+1)

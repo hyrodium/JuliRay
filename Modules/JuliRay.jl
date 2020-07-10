@@ -2,6 +2,7 @@ module JuliRay
 
 using LinearAlgebra
 using Printf
+using Colors
 
 include("_BasicFunctions.jl")
 
@@ -31,6 +32,14 @@ end
 """
 function povray_script(x::Array{Array{T,1},1}) where T <: Real
     return join(povray_script.(x), ", ")
+end
+
+function povray_script(x::Array{T,1}) where T <: Color
+    return join((s->"texture{pigment{"*s*"}}").(povray_script.(x)), ", ")
+end
+
+function povray_script(x::Array{T,1}, t::Array{FT,1}) where T <: Color
+    return join((s->"texture{pigment{"*s*"}}").([povray_script(x[i],t[i]) for i in 1:length(x)]), ", ")
 end
 
 # Types

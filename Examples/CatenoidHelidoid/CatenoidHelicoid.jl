@@ -44,7 +44,7 @@ for i in 0:N-1
     nn = 18
 
     col(u) = Float64(xor(sin(nn*u[1])<0,sin(nn*u[2])>0))*RGB(0,1,0.5) + Float64(xor(sin(nn*u[1])>0,sin(nn*u[2])>0))*RGB(0,0.5,1)
-    obj = JuliRay.ColoredParametricSurface(𝒑, D1, D2, mesh=mesh, color=col)
+    obj = ColoredParametricSurface(𝒑, D1, D2, mesh=mesh, color=col)
     lng = 30°+180°*i/N
     lat = 20°
     lookat = [0,0,1]
